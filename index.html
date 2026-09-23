@@ -772,13 +772,14 @@ document
       return;
     }
 
-    const payload = {
-      studentId: studentId,
-      grade: selectedStudentGrade,
-      month: month,
-      content: content,
-      billed: billed
-    };
+const payload = {
+  id: editingMonthlyId,
+  studentId: studentId,
+  grade: selectedStudentGrade,
+  month: month,
+  content: content,
+  billed: billed
+};
 
     try {
 
