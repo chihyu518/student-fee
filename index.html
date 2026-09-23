@@ -41,6 +41,43 @@
       font-size: 14px;
     }
 
+    .nav {
+  background: white;
+  border-bottom: 1px solid #ececec;
+}
+
+.nav-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.nav-btn {
+  border: none;
+  background: transparent;
+  padding: 16px 18px;
+  font-size: 15px;
+  color: #777;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  font-family: inherit;
+}
+
+.nav-btn:hover {
+  color: #333;
+  background: #fafafa;
+}
+
+.nav-btn.active {
+  color: #222;
+  font-weight: 600;
+  border-bottom-color: #222;
+}
+    
     .container {
       max-width: 1000px;
       margin: 0 auto;
@@ -144,13 +181,35 @@
     </div>
   </header>
 
+  <nav class="nav">
+  <div class="nav-inner">
+
+  <button class="nav-btn active" onclick="showPage('dashboard', this)">
+  🏠 總覽
+</button>
+
+<button class="nav-btn" onclick="showPage('monthlyPage', this)">
+  💰 月收
+</button>
+
+    <button class="nav-btn">
+      📚 季收
+    </button>
+
+    <button class="nav-btn">
+      ⚙️ 收費設定
+    </button>
+
+  </div>
+</nav>
+  
   <main class="container">
 
     <div id="loading" class="loading">
       ⏳ 正在讀取資料...
     </div>
 
-    <div id="dashboard" style="display:none;">
+    <div id="dashboard" class="page" style="display:none;">
 
       <div class="cards">
 
@@ -196,6 +255,18 @@
 
     </div>
 
+    <div id="monthlyPage" class="page" style="display:none;">
+
+  <div class="section">
+    <h2>💰 月收管理</h2>
+
+    <div class="status">
+      月收頁面建立成功 🎉
+    </div>
+  </div>
+
+</div>
+    
   </main>
 
   <script>
@@ -247,6 +318,25 @@
       }
     }
 
+        function showPage(pageId, button) {
+
+      document.querySelectorAll('.page').forEach(page => {
+        page.style.display = 'none';
+      });
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      document.getElementById(pageId).style.display = 'block';
+
+      button.classList.add('active');
+    }
+
+    loadData();
+
+  </script>
+  
     loadData();
 
   </script>
