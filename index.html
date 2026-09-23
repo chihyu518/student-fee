@@ -13,62 +13,200 @@
 
     body {
       margin: 0;
-      padding: 40px 20px;
-      background: #f7f7f7;
+      background: #f6f7f9;
       font-family: -apple-system, BlinkMacSystemFont,
         "Segoe UI", "Noto Sans TC", sans-serif;
-      color: #333;
+      color: #2f3437;
+    }
+
+    .header {
+      background: white;
+      border-bottom: 1px solid #ececec;
+      padding: 22px 20px;
+    }
+
+    .header-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .header p {
+      margin: 7px 0 0;
+      color: #888;
+      font-size: 14px;
     }
 
     .container {
-      max-width: 700px;
+      max-width: 1000px;
       margin: 0 auto;
+      padding: 25px 20px 50px;
+    }
+
+    .loading {
       background: white;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+      padding: 25px;
+      border-radius: 16px;
       text-align: center;
-    }
-
-    h1 {
-      margin-top: 0;
-    }
-
-    .status {
-      margin-top: 20px;
-      padding: 18px;
-      background: #f2f7f3;
-      border-radius: 14px;
-      font-size: 18px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
     }
 
     .error {
-      background: #fff1f1;
       color: #b42318;
+      background: #fff1f1;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 18px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    }
+
+    .card-icon {
+      font-size: 25px;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 7px;
+    }
+
+    .card-number {
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .card-unit {
+      font-size: 14px;
+      color: #999;
+      margin-left: 3px;
+    }
+
+    .section {
+      margin-top: 25px;
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    }
+
+    .section h2 {
+      font-size: 18px;
+      margin: 0 0 15px;
+    }
+
+    .status {
+      padding: 14px 16px;
+      background: #f7f8fa;
+      border-radius: 12px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 750px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .header h1 {
+        font-size: 22px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .card-number {
+        font-size: 27px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+  <header class="header">
+    <div class="header-inner">
+      <h1>💰 學生收費管理系統</h1>
+      <p>學生・月收・季收・收費設定</p>
+    </div>
+  </header>
 
-    <h1>💰 學生收費管理系統</h1>
+  <main class="container">
 
-    <div id="status" class="status">
-      ⏳ 正在讀取學生資料...
+    <div id="loading" class="loading">
+      ⏳ 正在讀取資料...
     </div>
 
-  </div>
+    <div id="dashboard" style="display:none;">
+
+      <div class="cards">
+
+        <div class="card">
+          <div class="card-icon">🧑‍🎓</div>
+          <div class="card-title">學生總數</div>
+          <span id="studentCount" class="card-number">0</span>
+          <span class="card-unit">位</span>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">💰</div>
+          <div class="card-title">月收資料</div>
+          <span id="monthlyCount" class="card-number">0</span>
+          <span class="card-unit">筆</span>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">📚</div>
+          <div class="card-title">季收資料</div>
+          <span id="seasonCount" class="card-number">0</span>
+          <span class="card-unit">筆</span>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">⚙️</div>
+          <div class="card-title">收費設定</div>
+          <span id="settingCount" class="card-number">0</span>
+          <span class="card-unit">筆</span>
+        </div>
+
+      </div>
+
+      <div class="section">
+        <h2>📊 系統狀態</h2>
+
+        <div class="status">
+          🟢 Notion 資料連線正常<br>
+          🟢 學生名單已同步<br>
+          🟢 月收、季收與收費設定已連接
+        </div>
+      </div>
+
+    </div>
+
+  </main>
 
   <script>
 
-    // 把剛剛複製的 GAS /exec 網址貼在這裡
+    // ⚠️ 把你剛才複製的 GAS /exec 網址貼在這裡
     const API_URL = 'https://script.google.com/macros/s/AKfycbzSbeATYxXHLjmKwOY0QLuBFnoaJEWpmcWL1N3Jp3CJGAJg8qCQ_ODyS92HPGyTrbi-ig/exec';
 
     async function loadData() {
 
-      const status = document.getElementById('status');
+      const loading = document.getElementById('loading');
+      const dashboard = document.getElementById('dashboard');
 
       try {
 
@@ -84,19 +222,27 @@
           throw new Error(data.error || '資料讀取失敗');
         }
 
-        status.innerHTML =
-          '✅ 連線成功！目前共有 <strong>' +
-          data.students.length +
-          '</strong> 位學生';
+        document.getElementById('studentCount').textContent =
+          data.students.length;
+
+        document.getElementById('monthlyCount').textContent =
+          data.monthlyFees.length;
+
+        document.getElementById('seasonCount').textContent =
+          data.seasonFees.length;
+
+        document.getElementById('settingCount').textContent =
+          data.feeSettings.length;
+
+        loading.style.display = 'none';
+        dashboard.style.display = 'block';
 
       } catch (error) {
 
         console.error(error);
 
-        status.classList.add('error');
-
-        status.innerHTML =
-          '❌ 資料讀取失敗';
+        loading.classList.add('error');
+        loading.innerHTML = '❌ 資料讀取失敗';
 
       }
     }
