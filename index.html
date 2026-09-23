@@ -773,6 +773,7 @@ document
     }
 
 const payload = {
+  action: editingMonthlyId ? 'updateMonthlyFee' : 'createMonthlyFee',
   id: editingMonthlyId,
   studentId: studentId,
   grade: selectedStudentGrade,
