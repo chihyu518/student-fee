@@ -772,7 +772,21 @@ document
         throw new Error(result.error || '新增失敗');
       }
 
-      alert('月收新增成功！');
+alert('月收新增成功！');
+
+// 清空表單
+document.getElementById('monthlyStudent').value = '';
+document.getElementById('monthlyMonth').value = '';
+document.getElementById('monthlyContent').value = '';
+document.getElementById('monthlyBilled').checked = false;
+
+selectedStudentGrade = '';
+
+// 收起新增表單
+document.getElementById('monthlyForm').style.display = 'none';
+
+// 重新讀取最新資料
+await loadData();
 
     } catch (error) {
 
