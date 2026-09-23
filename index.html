@@ -77,6 +77,48 @@
   font-weight: 600;
   border-bottom-color: #222;
 }
+
+    .monthly-item {
+  background: #f8f9fa;
+  border: 1px solid #eeeeee;
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+
+.monthly-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.monthly-name {
+  font-size: 17px;
+  font-weight: 600;
+  color: #222;
+}
+
+.monthly-tag {
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: #666;
+}
+
+.monthly-content {
+  font-size: 15px;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+.monthly-status {
+  font-size: 14px;
+  color: #555;
+}
     
     .container {
       max-width: 1000px;
@@ -317,15 +359,31 @@ monthlyList.innerHTML = data.monthlyFees.map(item => {
     ? student.name
     : '未知學生';
 
-  return `
-    <div>
-      ${studentName}｜
-      ${item.grade || '未設定年級'}｜
-      ${item.month || '未設定月份'}｜
-      ${item.content || '未設定收費內容'}｜
+return `
+  <div class="monthly-item">
+
+    <div class="monthly-top">
+      <span class="monthly-name">${studentName}</span>
+
+      <span class="monthly-tag">
+        ${item.grade || '未設定年級'}
+      </span>
+
+      <span class="monthly-tag">
+        ${item.month || '未設定月份'}
+      </span>
+    </div>
+
+    <div class="monthly-content">
+      💰 ${item.content || '未設定收費內容'}
+    </div>
+
+    <div class="monthly-status">
       ${item.billed ? '✅ 已開單' : '⬜ 未開單'}
     </div>
-  `;
+
+  </div>
+`;
 
 }).join('');
 
