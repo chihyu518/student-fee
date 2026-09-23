@@ -7,6 +7,10 @@
   <title>學生收費管理系統</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 40px 20px;
@@ -30,11 +34,17 @@
       margin-top: 0;
     }
 
-    .success {
+    .status {
       margin-top: 20px;
-      padding: 16px;
+      padding: 18px;
       background: #f2f7f3;
-      border-radius: 12px;
+      border-radius: 14px;
+      font-size: 18px;
+    }
+
+    .error {
+      background: #fff1f1;
+      color: #b42318;
     }
   </style>
 </head>
@@ -45,11 +55,55 @@
 
     <h1>💰 學生收費管理系統</h1>
 
-    <div class="success">
-      網站建立成功 🎉
+    <div id="status" class="status">
+      ⏳ 正在讀取學生資料...
     </div>
 
   </div>
+
+  <script>
+
+    // 把剛剛複製的 GAS /exec 網址貼在這裡
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzSbeATYxXHLjmKwOY0QLuBFnoaJEWpmcWL1N3Jp3CJGAJg8qCQ_ODyS92HPGyTrbi-ig/exec';
+
+    async function loadData() {
+
+      const status = document.getElementById('status');
+
+      try {
+
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+          throw new Error('API 連線失敗');
+        }
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || '資料讀取失敗');
+        }
+
+        status.innerHTML =
+          '✅ 連線成功！目前共有 <strong>' +
+          data.students.length +
+          '</strong> 位學生';
+
+      } catch (error) {
+
+        console.error(error);
+
+        status.classList.add('error');
+
+        status.innerHTML =
+          '❌ 資料讀取失敗';
+
+      }
+    }
+
+    loadData();
+
+  </script>
 
 </body>
 </html>
