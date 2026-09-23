@@ -78,6 +78,79 @@
   border-bottom-color: #222;
 }
 
+    .monthly-form {
+  background: #f8f9fa;
+  border: 1px solid #eeeeee;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.monthly-form h3 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 18px;
+}
+
+.monthly-form label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+}
+
+.monthly-form select,
+.monthly-form input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  background: white;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+
+.monthly-form select:focus,
+.monthly-form input[type="text"]:focus {
+  border-color: #999;
+}
+
+.monthly-form input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+#saveMonthlyBtn,
+#cancelMonthlyBtn {
+  margin-top: 18px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+#saveMonthlyBtn {
+  border: none;
+  background: #222;
+  color: white;
+  font-weight: 600;
+}
+
+#cancelMonthlyBtn {
+  border: 1px solid #dddddd;
+  background: white;
+  color: #555;
+  margin-left: 6px;
+}
+
+#saveMonthlyBtn:hover,
+#cancelMonthlyBtn:hover {
+  opacity: 0.85;
+}
+    
     .monthly-actions {
   display: flex;
   justify-content: flex-end;
@@ -399,9 +472,9 @@
 
 </div>
 
-    <div id="monthlyForm" style="display:none;">
-
-  <h3>新增月收</h3>
+    <div id="monthlyForm" class="monthly-form" style="display:none;">
+      
+ <h3>➕ 新增月收</h3>
 
   <label for="monthlyStudent">學生</label>
   <select id="monthlyStudent">
@@ -465,6 +538,7 @@
 
     let monthlyFeesData = [];
     let studentsData = [];
+    let selectedStudentGrade = '';
     
     async function loadData() {
 
@@ -642,6 +716,20 @@ document
   .getElementById('cancelMonthlyBtn')
   .addEventListener('click', function () {
     document.getElementById('monthlyForm').style.display = 'none';
+  });
+
+    document
+  .getElementById('monthlyStudent')
+  .addEventListener('change', function () {
+
+    const student = studentsData.find(
+      student => student.id === this.value
+    );
+
+    selectedStudentGrade = student
+      ? student.grade
+      : '';
+
   });
     
     loadData();
