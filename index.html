@@ -250,6 +250,22 @@
   font-size: 14px;
   color: #555;
 }
+
+    .edit-monthly-btn {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border: 1px solid #dddddd;
+  border-radius: 9px;
+  background: white;
+  color: #444;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.edit-monthly-btn:hover {
+  background: #f3f3f3;
+}
     
     .container {
       max-width: 1000px;
@@ -653,6 +669,13 @@ renderMonthlyFees(monthlyFeesData);
         <div class="monthly-status">
           ${item.billed ? '✅ 已開單' : '⬜ 未開單'}
         </div>
+
+<button
+  type="button"
+  class="edit-monthly-btn"
+  data-id="${item.id}">
+  ✏️ 編輯
+</button>
 
       </div>
     `;
