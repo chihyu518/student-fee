@@ -78,6 +78,34 @@
   border-bottom-color: #222;
 }
 
+    .monthly-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.add-monthly-btn {
+  border: none;
+  background: #222;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-monthly-btn:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 600px) {
+  .add-monthly-btn {
+    width: 100%;
+  }
+}
+    
     .monthly-filters {
   display: flex;
   gap: 10px;
@@ -332,6 +360,12 @@
   <div class="section">
     <h2>💰 月收管理</h2>
 
+    <div class="monthly-actions">
+  <button class="add-monthly-btn" id="addMonthlyBtn">
+    ＋ 新增月收
+  </button>
+</div>
+    
     <div class="monthly-filters">
 
   <select id="monthFilter">
@@ -362,6 +396,56 @@
     <option value="國二">國二</option>
     <option value="國三">國三</option>
   </select>
+
+</div>
+
+    <div id="monthlyForm" style="display:none;">
+
+  <h3>新增月收</h3>
+
+  <label for="monthlyStudent">學生</label>
+  <select id="monthlyStudent">
+    <option value="">請選擇學生</option>
+  </select>
+
+  <label for="monthlyMonth">收費月份</label>
+  <select id="monthlyMonth">
+    <option value="">請選擇月份</option>
+    <option value="1月">1月</option>
+    <option value="2月">2月</option>
+    <option value="3月">3月</option>
+    <option value="4月">4月</option>
+    <option value="5月">5月</option>
+    <option value="6月">6月</option>
+    <option value="7月">7月</option>
+    <option value="8月">8月</option>
+    <option value="9月">9月</option>
+    <option value="10月">10月</option>
+    <option value="11月">11月</option>
+    <option value="12月">12月</option>
+  </select>
+
+  <label for="monthlyContent">收費內容</label>
+  <input
+    type="text"
+    id="monthlyContent"
+    placeholder="例如：課輔6000"
+  >
+
+  <label>
+    <input type="checkbox" id="monthlyBilled">
+    已開單
+  </label>
+
+  <div>
+    <button type="button" id="saveMonthlyBtn">
+      儲存
+    </button>
+
+    <button type="button" id="cancelMonthlyBtn">
+      取消
+    </button>
+  </div>
 
 </div>
     
@@ -403,6 +487,8 @@
 
         monthlyFeesData = data.monthlyFees;
         studentsData = data.students;
+
+        renderStudentOptions();
         
         document.getElementById('studentCount').textContent =
           data.students.length;
@@ -431,6 +517,27 @@ renderMonthlyFees(monthlyFeesData);
       }
     }
 
+    function renderStudentOptions() {
+
+  const studentSelect =
+    document.getElementById('monthlyStudent');
+
+  studentSelect.innerHTML =
+    '<option value="">請選擇學生</option>';
+
+  studentsData.forEach(student => {
+
+    const option = document.createElement('option');
+
+    option.value = student.id;
+    option.textContent =
+      `${student.name}｜${student.grade || '未設定年級'}`;
+
+    studentSelect.appendChild(option);
+
+  });
+}
+    
     function renderMonthlyFees(monthlyFees) {
 
   const monthlyList = document.getElementById('monthlyList');
@@ -524,6 +631,18 @@ renderMonthlyFees(monthlyFeesData);
 document
   .getElementById('gradeFilter')
   .addEventListener('change', filterMonthlyFees);
+
+    document
+  .getElementById('addMonthlyBtn')
+  .addEventListener('click', function () {
+    document.getElementById('monthlyForm').style.display = 'block';
+  });
+
+document
+  .getElementById('cancelMonthlyBtn')
+  .addEventListener('click', function () {
+    document.getElementById('monthlyForm').style.display = 'none';
+  });
     
     loadData();
 
