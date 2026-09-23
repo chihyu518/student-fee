@@ -260,9 +260,9 @@
   <div class="section">
     <h2>💰 月收管理</h2>
 
-    <div class="status">
-      月收頁面建立成功 🎉
-    </div>
+<div id="monthlyList">
+  月收資料載入中...
+</div>
   </div>
 
 </div>
@@ -298,6 +298,38 @@
 
         document.getElementById('monthlyCount').textContent =
           data.monthlyFees.length;
+
+        const monthlyList = document.getElementById('monthlyList');
+
+if (data.monthlyFees.length === 0) {
+
+  monthlyList.innerHTML = '目前沒有月收資料';
+
+} else {
+
+monthlyList.innerHTML = data.monthlyFees.map(item => {
+
+  const student = data.students.find(
+    student => student.id === item.studentId
+  );
+
+  const studentName = student
+    ? student.name
+    : '未知學生';
+
+  return `
+    <div>
+      ${studentName}｜
+      ${item.grade || '未設定年級'}｜
+      ${item.month || '未設定月份'}｜
+      ${item.content || '未設定收費內容'}｜
+      ${item.billed ? '✅ 已開單' : '⬜ 未開單'}
+    </div>
+  `;
+
+}).join('');
+
+}
 
         document.getElementById('seasonCount').textContent =
           data.seasonFees.length;
