@@ -798,7 +798,7 @@ const payload = {
         throw new Error(result.error || '新增失敗');
       }
 
-alert('月收新增成功！');
+alert(editingMonthlyId ? '月收修改成功！' : '月收新增成功！');
 
 // 清空表單
 document.getElementById('monthlyStudent').value = '';
