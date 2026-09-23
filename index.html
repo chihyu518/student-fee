@@ -78,6 +78,36 @@
   border-bottom-color: #222;
 }
 
+    .monthly-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.monthly-filters select {
+  padding: 10px 14px;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  background: white;
+  font-size: 14px;
+  color: #444;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+.monthly-filters select:focus {
+  border-color: #999;
+}
+
+@media (max-width: 600px) {
+  .monthly-filters select {
+    flex: 1;
+    min-width: 130px;
+  }
+}
+    
     .monthly-item {
   background: #f8f9fa;
   border: 1px solid #eeeeee;
@@ -302,6 +332,39 @@
   <div class="section">
     <h2>💰 月收管理</h2>
 
+    <div class="monthly-filters">
+
+  <select id="monthFilter">
+    <option value="">全部月份</option>
+    <option value="1月">1月</option>
+    <option value="2月">2月</option>
+    <option value="3月">3月</option>
+    <option value="4月">4月</option>
+    <option value="5月">5月</option>
+    <option value="6月">6月</option>
+    <option value="7月">7月</option>
+    <option value="8月">8月</option>
+    <option value="9月">9月</option>
+    <option value="10月">10月</option>
+    <option value="11月">11月</option>
+    <option value="12月">12月</option>
+  </select>
+
+  <select id="gradeFilter">
+    <option value="">全部年級</option>
+    <option value="一年級">一年級</option>
+    <option value="二年級">二年級</option>
+    <option value="三年級">三年級</option>
+    <option value="四年級">四年級</option>
+    <option value="五年級">五年級</option>
+    <option value="六年級">六年級</option>
+    <option value="國一">國一</option>
+    <option value="國二">國二</option>
+    <option value="國三">國三</option>
+  </select>
+
+</div>
+    
 <div id="monthlyList">
   月收資料載入中...
 </div>
@@ -316,6 +379,9 @@
     // ⚠️ 把你剛才複製的 GAS /exec 網址貼在這裡
     const API_URL = 'https://script.google.com/macros/s/AKfycbzSbeATYxXHLjmKwOY0QLuBFnoaJEWpmcWL1N3Jp3CJGAJg8qCQ_ODyS92HPGyTrbi-ig/exec';
 
+    let monthlyFeesData = [];
+    let studentsData = [];
+    
     async function loadData() {
 
       const loading = document.getElementById('loading');
@@ -335,59 +401,16 @@
           throw new Error(data.error || '資料讀取失敗');
         }
 
+        monthlyFeesData = data.monthlyFees;
+        studentsData = data.students;
+        
         document.getElementById('studentCount').textContent =
           data.students.length;
 
         document.getElementById('monthlyCount').textContent =
           data.monthlyFees.length;
 
-        const monthlyList = document.getElementById('monthlyList');
-
-if (data.monthlyFees.length === 0) {
-
-  monthlyList.innerHTML = '目前沒有月收資料';
-
-} else {
-
-monthlyList.innerHTML = data.monthlyFees.map(item => {
-
-  const student = data.students.find(
-    student => student.id === item.studentId
-  );
-
-  const studentName = student
-    ? student.name
-    : '未知學生';
-
-return `
-  <div class="monthly-item">
-
-    <div class="monthly-top">
-      <span class="monthly-name">${studentName}</span>
-
-      <span class="monthly-tag">
-        ${item.grade || '未設定年級'}
-      </span>
-
-      <span class="monthly-tag">
-        ${item.month || '未設定月份'}
-      </span>
-    </div>
-
-    <div class="monthly-content">
-      💰 ${item.content || '未設定收費內容'}
-    </div>
-
-    <div class="monthly-status">
-      ${item.billed ? '✅ 已開單' : '⬜ 未開單'}
-    </div>
-
-  </div>
-`;
-
-}).join('');
-
-}
+renderMonthlyFees(monthlyFeesData);
 
         document.getElementById('seasonCount').textContent =
           data.seasonFees.length;
@@ -408,6 +431,77 @@ return `
       }
     }
 
+    function renderMonthlyFees(monthlyFees) {
+
+  const monthlyList = document.getElementById('monthlyList');
+
+  if (monthlyFees.length === 0) {
+    monthlyList.innerHTML = '目前沒有符合條件的月收資料';
+    return;
+  }
+
+  monthlyList.innerHTML = monthlyFees.map(item => {
+
+    const student = studentsData.find(
+      student => student.id === item.studentId
+    );
+
+    const studentName = student
+      ? student.name
+      : '未知學生';
+
+    return `
+      <div class="monthly-item">
+
+        <div class="monthly-top">
+          <span class="monthly-name">${studentName}</span>
+
+          <span class="monthly-tag">
+            ${item.grade || '未設定年級'}
+          </span>
+
+          <span class="monthly-tag">
+            ${item.month || '未設定月份'}
+          </span>
+        </div>
+
+        <div class="monthly-content">
+          💰 ${item.content || '未設定收費內容'}
+        </div>
+
+        <div class="monthly-status">
+          ${item.billed ? '✅ 已開單' : '⬜ 未開單'}
+        </div>
+
+      </div>
+    `;
+
+  }).join('');
+}
+
+    function filterMonthlyFees() {
+
+  const selectedMonth =
+    document.getElementById('monthFilter').value;
+
+  const selectedGrade =
+    document.getElementById('gradeFilter').value;
+
+  const filteredFees = monthlyFeesData.filter(item => {
+
+    const matchMonth =
+      !selectedMonth || item.month === selectedMonth;
+
+    const matchGrade =
+      !selectedGrade || item.grade === selectedGrade;
+
+    return matchMonth && matchGrade;
+
+  });
+
+  renderMonthlyFees(filteredFees);
+}
+    
         function showPage(pageId, button) {
 
       document.querySelectorAll('.page').forEach(page => {
@@ -423,6 +517,14 @@ return `
       button.classList.add('active');
     }
 
+    document
+  .getElementById('monthFilter')
+  .addEventListener('change', filterMonthlyFees);
+
+document
+  .getElementById('gradeFilter')
+  .addEventListener('change', filterMonthlyFees);
+    
     loadData();
 
   </script>
