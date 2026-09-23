@@ -555,6 +555,7 @@
     let monthlyFeesData = [];
     let studentsData = [];
     let selectedStudentGrade = '';
+    let editingMonthlyId = '';
     
     async function loadData() {
 
@@ -826,6 +827,61 @@ document
     document.getElementById('monthlyForm').style.display = 'none';
   });
 
+    document
+  .getElementById('monthlyList')
+  .addEventListener('click', function (event) {
+
+    const button = event.target.closest('.edit-monthly-btn');
+
+    if (!button) {
+      return;
+    }
+
+    const item = monthlyFeesData.find(
+      fee => fee.id === button.dataset.id
+    );
+
+    if (!item) {
+      return;
+    }
+
+    editingMonthlyId = item.id;
+
+    const studentSelect =
+      document.getElementById('monthlyStudent');
+
+    const monthSelect =
+      document.getElementById('monthlyMonth');
+
+    const contentInput =
+      document.getElementById('monthlyContent');
+
+    const billedCheckbox =
+      document.getElementById('monthlyBilled');
+
+    studentSelect.value = item.studentId;
+
+    studentSelect.dispatchEvent(
+      new Event('change')
+    );
+
+    monthSelect.value = item.month || '';
+
+    contentInput.value = item.content || '';
+
+    billedCheckbox.checked = item.billed === true;
+
+    document.getElementById('monthlyForm').style.display = 'block';
+
+    document
+      .getElementById('monthlyForm')
+      .scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+
+  });
+    
     document
   .getElementById('monthlyStudent')
   .addEventListener('change', function () {
