@@ -783,6 +783,11 @@ const payload = {
   billed: billed
 };
 
+    alert(
+  '送出 action：' + payload.action +
+  '\n送出 id：' + payload.id
+);
+    
     try {
 
       const response = await fetch(API_URL, {
