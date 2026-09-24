@@ -983,17 +983,39 @@ document
 
   });
     
-    document
+document
   .getElementById('monthlyStudent')
   .addEventListener('change', function () {
 
+    const studentId = this.value;
+
     const student = studentsData.find(
-      student => student.id === this.value
+      student => student.id === studentId
     );
 
     selectedStudentGrade = student
       ? student.grade
       : '';
+
+    const settings = feeSettingsData.filter(
+      setting =>
+        setting.studentId === studentId &&
+        setting.status === '上課中'
+    );
+
+    const contentInput =
+      document.getElementById('monthlyContent');
+
+    if (settings.length === 0) {
+      contentInput.value = '';
+      return;
+    }
+
+    contentInput.value = settings
+      .map(setting =>
+        `${setting.course}${setting.amount ?? ''}`
+      )
+      .join('＋');
 
   });
     
