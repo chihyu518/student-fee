@@ -896,6 +896,80 @@ document
       });
 
   });
+
+    document
+  .getElementById('monthlyList')
+  .addEventListener('click', async function (event) {
+
+    const button = event.target.closest('.delete-monthly-btn');
+
+    if (!button) {
+      return;
+    }
+
+    const item = monthlyFeesData.find(
+      fee => fee.id === button.dataset.id
+    );
+
+    if (!item) {
+      alert('找不到這筆月收資料');
+      return;
+    }
+
+    const student = studentsData.find(
+      student => student.id === item.studentId
+    );
+
+    const studentName = student
+      ? student.name
+      : '這位學生';
+
+    const confirmed = confirm(
+      `確定要刪除「${studentName}｜${item.month}｜${item.content}」嗎？`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify({
+          action: 'deleteMonthlyFee',
+          id: item.id
+        })
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(
+          result.error || '刪除失敗'
+        );
+      }
+
+      alert('月收刪除成功！');
+
+      editingMonthlyId = '';
+
+      document.getElementById('monthlyForm').style.display = 'none';
+
+      await loadData();
+
+    } catch (error) {
+
+      alert(
+        '刪除月收失敗：' + error.message
+      );
+
+    }
+
+  });
     
     document
   .getElementById('monthlyStudent')
