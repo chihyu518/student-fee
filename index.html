@@ -737,10 +737,20 @@ document
   .getElementById('gradeFilter')
   .addEventListener('change', filterMonthlyFees);
 
-    document
+document
   .getElementById('addMonthlyBtn')
   .addEventListener('click', function () {
+
+    editingMonthlyId = '';
+    selectedStudentGrade = '';
+
+    document.getElementById('monthlyStudent').value = '';
+    document.getElementById('monthlyMonth').value = '';
+    document.getElementById('monthlyContent').value = '';
+    document.getElementById('monthlyBilled').checked = false;
+
     document.getElementById('monthlyForm').style.display = 'block';
+
   });
 
     document
