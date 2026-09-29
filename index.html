@@ -548,6 +548,9 @@
 <div id="monthlyList">
   月收資料載入中...
 </div>
+    <div id="seasonList">
+  季收資料載入中...
+</div>
   </div>
 
 </div>
@@ -747,6 +750,7 @@
           data.monthlyFees.length;
 
 renderMonthlyFees(monthlyFeesData);
+renderSeasonFees(seasonFeesData);
 
         document.getElementById('seasonCount').textContent =
           data.seasonFees.length;
@@ -843,6 +847,62 @@ renderMonthlyFees(monthlyFeesData);
   data-id="${item.id}">
   🗑️ 刪除
 </button>
+
+      </div>
+    `;
+
+  }).join('');
+}
+
+    function renderSeasonFees(seasonFees) {
+
+  const seasonList = document.getElementById('seasonList');
+
+  if (seasonFees.length === 0) {
+    seasonList.innerHTML = '目前沒有季收資料';
+    return;
+  }
+
+  seasonList.innerHTML = seasonFees.map(item => {
+
+    const student = studentsData.find(
+      student => student.id === item.studentId
+    );
+
+    const studentName = student
+      ? student.name
+      : item.studentName || '未知學生';
+
+    return `
+      <div class="monthly-item">
+
+        <div class="monthly-top">
+
+          <span class="monthly-name">
+            ${studentName}
+          </span>
+
+          <span class="monthly-tag">
+            ${item.grade || '未設定年級'}
+          </span>
+
+          <span class="monthly-tag">
+            ${item.period || '未設定期別'}
+          </span>
+
+        </div>
+
+        <div class="monthly-content">
+          📅 ${item.startDate || '未設定'} ～ ${item.endDate || '未設定'}
+        </div>
+
+        <div class="monthly-content">
+          📚 ${item.totalLessons ?? '未設定'} 堂
+        </div>
+
+        <div class="monthly-status">
+          ${item.billed ? '✅ 已開單' : '⬜ 未開單'}
+        </div>
 
       </div>
     `;
