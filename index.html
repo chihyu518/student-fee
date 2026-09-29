@@ -559,6 +559,140 @@
     // ⚠️ 把你剛才複製的 GAS /exec 網址貼在這裡
     const API_URL = 'https://script.google.com/macros/s/AKfycbzSbeATYxXHLjmKwOY0QLuBFnoaJEWpmcWL1N3Jp3CJGAJg8qCQ_ODyS92HPGyTrbi-ig/exec';
 
+    const holidays2026 = [
+  "2026-01-01",
+
+  "2026-02-14",
+  "2026-02-15",
+  "2026-02-16",
+  "2026-02-17",
+  "2026-02-18",
+  "2026-02-19",
+  "2026-02-20",
+  "2026-02-21",
+  "2026-02-22",
+
+  "2026-02-27",
+  "2026-02-28",
+
+  "2026-04-03",
+  "2026-04-04",
+  "2026-04-05",
+  "2026-04-06",
+
+  "2026-05-01",
+  "2026-06-19",
+
+  "2026-09-25",
+  "2026-09-28",
+
+  "2026-10-09",
+  "2026-10-10",
+
+  "2026-10-25",
+  "2026-10-26",
+
+  "2026-12-25"
+];
+
+    const holidays2027 = [
+  "2027-01-01",
+  "2027-01-02",
+  "2027-01-03",
+
+  "2027-02-04",
+  "2027-02-05",
+  "2027-02-06",
+  "2027-02-07",
+  "2027-02-08",
+  "2027-02-09",
+  "2027-02-10",
+
+  "2027-02-27",
+  "2027-02-28",
+  "2027-03-01",
+
+  "2027-04-03",
+  "2027-04-04",
+  "2027-04-05",
+  "2027-04-06",
+
+  "2027-04-30",
+  "2027-05-01",
+  "2027-05-02",
+
+  "2027-10-09",
+  "2027-10-10",
+  "2027-10-11",
+
+  "2027-10-23",
+  "2027-10-24",
+  "2027-10-25",
+
+  "2027-12-24",
+  "2027-12-25",
+  "2027-12-26",
+
+  "2027-12-31"
+];
+
+    const weekdayMap = {
+  '星期日': 0,
+  '星期一': 1,
+  '星期二': 2,
+  '星期三': 3,
+  '星期四': 4,
+  '星期五': 5,
+  '星期六': 6
+};
+
+    function countMonthlyClasses(year, month, classDays) {
+
+  const targetWeekdays = classDays
+    .map(day => weekdayMap[day])
+    .filter(day => day !== undefined);
+
+  if (targetWeekdays.length === 0) {
+    return 0;
+  }
+
+  const holidays =
+    String(year) === '2026'
+      ? holidays2026
+      : String(year) === '2027'
+        ? holidays2027
+        : [];
+
+  let count = 0;
+
+  const daysInMonth =
+    new Date(Number(year), Number(month), 0).getDate();
+
+  for (let day = 1; day <= daysInMonth; day++) {
+
+    const date = new Date(
+      Number(year),
+      Number(month) - 1,
+      day
+    );
+
+    if (!targetWeekdays.includes(date.getDay())) {
+      continue;
+    }
+
+    const dateString =
+      `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+    if (holidays.includes(dateString)) {
+      continue;
+    }
+
+    count++;
+  }
+
+  return count;
+}
+    
     let monthlyFeesData = [];
     let studentsData = [];
     let feeSettingsData = [];
@@ -1028,13 +1162,68 @@ document
       return;
     }
 
+    const year =
+      document.getElementById('monthlyYear').value;
+
+    const monthValue =
+      document.getElementById('monthlyMonth').value;
+
+    const month =
+      Number(
+        String(monthValue).replace('月', '')
+      );
+
     contentInput.value = settings
-      .map(setting =>
-        `${setting.course}${setting.amount ?? ''}`
-      )
+      .map(setting => {
+
+        // 月繳：依實際上課堂數計算
+        if (
+          setting.paymentType === '月繳' &&
+          year &&
+          month
+        ) {
+
+          const classCount =
+            countMonthlyClasses(
+              year,
+              month,
+              setting.classDays || []
+            );
+
+          const total =
+            classCount * (setting.amount || 0);
+
+          return `${setting.course}${classCount}堂×${setting.amount}＝${total}`;
+        }
+
+        // 季繳／學期繳：目前先維持原本金額
+        return `${setting.course}${setting.amount ?? ''}`;
+
+      })
       .join('＋');
 
   });
+
+    document
+  .getElementById('monthlyYear')
+  .addEventListener('change', function () {
+
+    document
+      .getElementById('monthlyStudent')
+      .dispatchEvent(new Event('change'));
+
+  });
+
+    document
+  .getElementById('monthlyMonth')
+  .addEventListener('change', function () {
+
+    document
+      .getElementById('monthlyStudent')
+      .dispatchEvent(new Event('change'));
+
+  });
+    
     
     loadData();
 
