@@ -1210,6 +1210,102 @@ document
   });
 
     document
+  .getElementById('saveSeasonBtn')
+  .addEventListener('click', async function () {
+
+    // 目前先處理「編輯季收」
+    if (!editingSeasonId) {
+      alert('目前尚未建立新增季收功能');
+      return;
+    }
+
+    const studentId =
+      document.getElementById('seasonStudent').value;
+
+    const period =
+      document.getElementById('seasonPeriod').value;
+
+    const startDate =
+      document.getElementById('seasonStartDate').value;
+
+    const endDate =
+      document.getElementById('seasonEndDate').value;
+
+    const totalLessons =
+      document.getElementById('seasonTotalLessons').value;
+
+    const billed =
+      document.getElementById('seasonBilled').checked;
+
+    if (!studentId) {
+      alert('請選擇學生');
+      return;
+    }
+
+    if (!period) {
+      alert('請選擇期別');
+      return;
+    }
+
+    const student = studentsData.find(
+      student => student.id === studentId
+    );
+
+    if (!student) {
+      alert('找不到學生資料');
+      return;
+    }
+
+    const payload = {
+      action: 'updateSeasonFee',
+      id: editingSeasonId,
+      studentId: studentId,
+      studentName: student.name,
+      grade: student.grade || '',
+      period: period,
+      startDate: startDate,
+      endDate: endDate,
+      totalLessons: totalLessons,
+      billed: billed
+    };
+
+    try {
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(
+          result.error || '季收修改失敗'
+        );
+      }
+
+      alert('季收修改成功！');
+
+      editingSeasonId = '';
+
+      document.getElementById('seasonForm').style.display = 'none';
+
+      await loadData();
+
+    } catch (error) {
+
+      alert(
+        '季收修改失敗：' + error.message
+      );
+
+    }
+
+  });
+    
+    document
   .getElementById('cancelSeasonBtn')
   .addEventListener('click', function () {
 
