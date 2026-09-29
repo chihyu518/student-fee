@@ -1198,6 +1198,8 @@ document
   .getElementById('addSeasonBtn')
   .addEventListener('click', function () {
 
+        editingSeasonId = '';
+
     document.getElementById('seasonForm').style.display = 'block';
 
     document
@@ -1209,15 +1211,9 @@ document
 
   });
 
-    document
+ document
   .getElementById('saveSeasonBtn')
   .addEventListener('click', async function () {
-
-    // 目前先處理「編輯季收」
-    if (!editingSeasonId) {
-      alert('目前尚未建立新增季收功能');
-      return;
-    }
 
     const studentId =
       document.getElementById('seasonStudent').value;
@@ -1256,9 +1252,16 @@ document
       return;
     }
 
+    const isEditing =
+      editingSeasonId !== '';
+
     const payload = {
-      action: 'updateSeasonFee',
+      action: isEditing
+        ? 'updateSeasonFee'
+        : 'createSeasonFee',
+
       id: editingSeasonId,
+
       studentId: studentId,
       studentName: student.name,
       grade: student.grade || '',
@@ -1283,13 +1286,27 @@ document
 
       if (!result.success) {
         throw new Error(
-          result.error || '季收修改失敗'
+          result.error ||
+          (isEditing
+            ? '季收修改失敗'
+            : '季收新增失敗')
         );
       }
 
-      alert('季收修改成功！');
+      alert(
+        isEditing
+          ? '季收修改成功！'
+          : '季收新增成功！'
+      );
 
       editingSeasonId = '';
+
+      document.getElementById('seasonStudent').value = '';
+document.getElementById('seasonPeriod').value = '';
+document.getElementById('seasonStartDate').value = '';
+document.getElementById('seasonEndDate').value = '';
+document.getElementById('seasonTotalLessons').value = '';
+document.getElementById('seasonBilled').checked = false;
 
       document.getElementById('seasonForm').style.display = 'none';
 
@@ -1298,7 +1315,10 @@ document
     } catch (error) {
 
       alert(
-        '季收修改失敗：' + error.message
+        (isEditing
+          ? '季收修改失敗：'
+          : '季收新增失敗：')
+        + error.message
       );
 
     }
