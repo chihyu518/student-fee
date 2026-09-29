@@ -818,6 +818,7 @@
     let holidaysData = [];
     let selectedStudentGrade = '';
     let editingMonthlyId = '';
+    let editingSeasonId = '';
     
     async function loadData() {
 
@@ -1213,6 +1214,56 @@ document
   .addEventListener('click', function () {
 
     document.getElementById('seasonForm').style.display = 'none';
+
+  });
+
+    document
+  .getElementById('seasonList')
+  .addEventListener('click', function (event) {
+
+    const button = event.target.closest('.edit-season-btn');
+
+    if (!button) {
+      return;
+    }
+
+    const item = seasonFeesData.find(
+      fee => fee.id === button.dataset.id
+    );
+
+    if (!item) {
+      alert('找不到這筆季收資料');
+      return;
+    }
+
+    editingSeasonId = item.id;
+
+    document.getElementById('seasonStudent').value =
+      item.studentId || '';
+
+    document.getElementById('seasonPeriod').value =
+      item.period || '';
+
+    document.getElementById('seasonStartDate').value =
+      item.startDate || '';
+
+    document.getElementById('seasonEndDate').value =
+      item.endDate || '';
+
+    document.getElementById('seasonTotalLessons').value =
+      item.totalLessons ?? '';
+
+    document.getElementById('seasonBilled').checked =
+      item.billed === true;
+
+    document.getElementById('seasonForm').style.display = 'block';
+
+    document
+      .getElementById('seasonForm')
+      .scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
 
   });
     
