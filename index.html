@@ -1179,7 +1179,21 @@ document
   .getElementById('addMonthlyBtn')
   .addEventListener('click', function () {
 
-    document
+    editingMonthlyId = '';
+    selectedStudentGrade = '';
+
+    document.getElementById('monthlyStudent').value = '';
+    document.getElementById('monthlyYear').value = '';
+    document.getElementById('monthlyMonth').value = '';
+    document.getElementById('monthlyContent').value = '';
+    document.getElementById('monthlyBilled').checked = false;
+
+    document.getElementById('monthlyForm').style.display = 'block';
+
+  });
+
+
+document
   .getElementById('addSeasonBtn')
   .addEventListener('click', function () {
 
@@ -1191,20 +1205,6 @@ document
         behavior: 'smooth',
         block: 'start'
       });
-
-  });
-    
-
-    editingMonthlyId = '';
-    selectedStudentGrade = '';
-
-    document.getElementById('monthlyStudent').value = '';
-    document.getElementById('monthlyYear').value = '';
-    document.getElementById('monthlyMonth').value = '';
-    document.getElementById('monthlyContent').value = '';
-    document.getElementById('monthlyBilled').checked = false;
-
-    document.getElementById('monthlyForm').style.display = 'block';
 
   });
 
