@@ -550,6 +550,28 @@
 </div>
 
     <h2 style="margin-top: 32px;">📚 季收管理</h2>
+
+    <div class="filters" style="margin-bottom: 20px;">
+
+  <select id="seasonGradeFilter">
+    <option value="">全部年級</option>
+    <option value="一年級">一年級</option>
+    <option value="二年級">二年級</option>
+    <option value="三年級">三年級</option>
+    <option value="四年級">四年級</option>
+    <option value="五年級">五年級</option>
+    <option value="六年級">六年級</option>
+    <option value="國一">國一</option>
+    <option value="國二">國二</option>
+    <option value="國三">國三</option>
+  </select>
+
+  <select id="seasonStudentFilter">
+    <option value="">全部學生</option>
+  </select>
+
+</div>
+    
     
     <div id="seasonList">
   季收資料載入中...
@@ -776,14 +798,23 @@ renderSeasonFees(seasonFeesData);
 
     function renderStudentOptions() {
 
+  // 月收新增表單的學生選單
   const studentSelect =
     document.getElementById('monthlyStudent');
 
   studentSelect.innerHTML =
     '<option value="">請選擇學生</option>';
 
+  // 季收管理的學生篩選選單
+  const seasonStudentFilter =
+    document.getElementById('seasonStudentFilter');
+
+  seasonStudentFilter.innerHTML =
+    '<option value="">全部學生</option>';
+
   studentsData.forEach(student => {
 
+    // 月收選單
     const option = document.createElement('option');
 
     option.value = student.id;
@@ -792,7 +823,17 @@ renderSeasonFees(seasonFeesData);
 
     studentSelect.appendChild(option);
 
+    // 季收篩選選單
+    const seasonOption = document.createElement('option');
+
+    seasonOption.value = student.id;
+    seasonOption.textContent =
+      `${student.name}｜${student.grade || '未設定年級'}`;
+
+    seasonStudentFilter.appendChild(seasonOption);
+
   });
+
 }
     
     function renderMonthlyFees(monthlyFees) {
@@ -935,6 +976,29 @@ renderSeasonFees(seasonFeesData);
 
   renderMonthlyFees(filteredFees);
 }
+
+    function filterSeasonFees() {
+
+  const selectedGrade =
+    document.getElementById('seasonGradeFilter').value;
+
+  const selectedStudent =
+    document.getElementById('seasonStudentFilter').value;
+
+  const filteredFees = seasonFeesData.filter(item => {
+
+    const matchGrade =
+      !selectedGrade || item.grade === selectedGrade;
+
+    const matchStudent =
+      !selectedStudent || item.studentId === selectedStudent;
+
+    return matchGrade && matchStudent;
+
+  });
+
+  renderSeasonFees(filteredFees);
+}
     
         function showPage(pageId, button) {
 
@@ -959,6 +1023,44 @@ document
   .getElementById('gradeFilter')
   .addEventListener('change', filterMonthlyFees);
 
+document
+  .getElementById('seasonGradeFilter')
+  .addEventListener('change', function () {
+
+    const selectedGrade = this.value;
+
+    const seasonStudentFilter =
+      document.getElementById('seasonStudentFilter');
+
+    seasonStudentFilter.innerHTML =
+      '<option value="">全部學生</option>';
+
+    studentsData
+      .filter(student =>
+        !selectedGrade || student.grade === selectedGrade
+      )
+      .forEach(student => {
+
+        const option =
+          document.createElement('option');
+
+        option.value = student.id;
+
+        option.textContent =
+          `${student.name}｜${student.grade || '未設定年級'}`;
+
+        seasonStudentFilter.appendChild(option);
+
+      });
+
+    filterSeasonFees();
+
+  });
+
+document
+  .getElementById('seasonStudentFilter')
+  .addEventListener('change', filterSeasonFees);
+    
 document
   .getElementById('addMonthlyBtn')
   .addEventListener('click', function () {
