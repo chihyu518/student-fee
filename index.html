@@ -963,7 +963,14 @@ const payload = {
         body: JSON.stringify(payload)
       });
 
-      const result = await response.json();
+      const responseText = await response.text();
+
+alert(
+  'GAS 回傳內容：\n' +
+  responseText.substring(0, 500)
+);
+
+const result = JSON.parse(responseText);
 
       if (!result.success) {
         throw new Error(result.error || '新增失敗');
