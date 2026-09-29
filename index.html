@@ -754,6 +754,7 @@ document
     selectedStudentGrade = '';
 
     document.getElementById('monthlyStudent').value = '';
+    document.getElementById('monthlyYear').value = '';
     document.getElementById('monthlyMonth').value = '';
     document.getElementById('monthlyContent').value = '';
     document.getElementById('monthlyBilled').checked = false;
@@ -769,6 +770,9 @@ document
     const studentId =
       document.getElementById('monthlyStudent').value;
 
+    const year =
+  document.getElementById('monthlyYear').value;
+    
     const month =
       document.getElementById('monthlyMonth').value;
 
@@ -804,6 +808,7 @@ const payload = {
   id: editingMonthlyId,
   studentId: studentId,
   grade: selectedStudentGrade,
+  year: year,
   month: month,
   content: content,
   billed: billed
@@ -884,6 +889,9 @@ document
     const studentSelect =
       document.getElementById('monthlyStudent');
 
+    const yearSelect =
+  document.getElementById('monthlyYear');
+    
     const monthSelect =
       document.getElementById('monthlyMonth');
 
@@ -899,6 +907,8 @@ document
       new Event('change')
     );
 
+    yearSelect.value = item.year || '';
+    
     monthSelect.value = item.month || '';
 
     contentInput.value = item.content || '';
