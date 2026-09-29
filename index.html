@@ -656,12 +656,24 @@
     return 0;
   }
 
-  const holidays =
+  // 國定假日
+  const nationalHolidays =
     String(year) === '2026'
       ? holidays2026
       : String(year) === '2027'
         ? holidays2027
         : [];
+
+  // Notion 自訂停課日
+  const customHolidays = holidaysData
+    .filter(holiday => holiday.enabled)
+    .map(holiday => holiday.date);
+
+  // 合併國定假日＋自訂停課日
+  const allHolidays = [
+    ...nationalHolidays,
+    ...customHolidays
+  ];
 
   let count = 0;
 
@@ -683,7 +695,7 @@
     const dateString =
       `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-    if (holidays.includes(dateString)) {
+    if (allHolidays.includes(dateString)) {
       continue;
     }
 
@@ -696,6 +708,7 @@
     let monthlyFeesData = [];
     let studentsData = [];
     let feeSettingsData = [];
+    let holidaysData = [];
     let selectedStudentGrade = '';
     let editingMonthlyId = '';
     
@@ -721,6 +734,7 @@
         monthlyFeesData = data.monthlyFees;
         studentsData = data.students;
         feeSettingsData = data.feeSettings;
+        holidaysData = data.holidays || [];
 
         renderStudentOptions();
         
