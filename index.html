@@ -381,9 +381,9 @@
   💰 月收
 </button>
 
-    <button class="nav-btn">
-      📚 季收
-    </button>
+    <button class="nav-btn" onclick="showPage('seasonPage', this)">
+  📚 季收
+</button>
 
     <button class="nav-btn">
       ⚙️ 收費設定
@@ -549,6 +549,11 @@
   月收資料載入中...
 </div>
 
+      </div>
+</div>
+
+    <div id="seasonPage" class="page" style="display:none;">
+      
     <h2 style="margin-top: 32px;">📚 季收管理</h2>
 
     <div class="filters" style="margin-bottom: 20px;">
@@ -576,7 +581,6 @@
     <div id="seasonList">
   季收資料載入中...
 </div>
-  </div>
 
 </div>
     
