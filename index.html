@@ -936,7 +936,6 @@ document
       return;
     }
 
-    alert('目前 editingMonthlyId：' + editingMonthlyId);
 const payload = {
   action: editingMonthlyId ? 'updateMonthlyFee' : 'createMonthlyFee',
   id: editingMonthlyId,
@@ -948,10 +947,6 @@ const payload = {
   billed: billed
 };
 
-    alert(
-  '送出 action：' + payload.action +
-  '\n送出 id：' + payload.id
-);
     
     try {
 
@@ -965,7 +960,6 @@ const payload = {
 
       const responseText = await response.text();
 
-console.log('GAS 回傳內容：', responseText);
 
 const result = JSON.parse(responseText);
 
