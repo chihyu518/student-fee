@@ -556,6 +556,80 @@
       
     <h2 style="margin-top: 32px;">📚 季收管理</h2>
 
+      <div class="monthly-actions">
+  <button class="add-monthly-btn" id="addSeasonBtn">
+    ＋ 新增季收
+  </button>
+</div>
+
+      <div id="seasonForm" style="display:none; margin-bottom:20px;">
+
+  <div class="section">
+
+    <h3>📚 新增季收</h3>
+
+    <select id="seasonStudent">
+      <option value="">請選擇學生</option>
+    </select>
+
+    <select id="seasonPeriod">
+      <option value="">請選擇期別</option>
+      <option value="第1期">第1期</option>
+      <option value="第2期">第2期</option>
+      <option value="第3期">第3期</option>
+      <option value="第4期">第4期</option>
+      <option value="第5期">第5期</option>
+    </select>
+
+    <input
+      type="date"
+      id="seasonStartDate"
+      placeholder="開始日期"
+    >
+
+    <input
+      type="date"
+      id="seasonEndDate"
+      placeholder="結束日期"
+    >
+
+    <input
+      type="number"
+      id="seasonTotalLessons"
+      placeholder="總堂數"
+      min="1"
+    >
+
+    <label>
+      <input
+        type="checkbox"
+        id="seasonBilled"
+      >
+      已開單
+    </label>
+
+    <div style="margin-top:12px;">
+
+      <button
+        type="button"
+        id="saveSeasonBtn"
+      >
+        儲存
+      </button>
+
+      <button
+        type="button"
+        id="cancelSeasonBtn"
+      >
+        取消
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+      
     <div class="filters" style="margin-bottom: 20px;">
 
   <select id="seasonGradeFilter">
@@ -771,6 +845,7 @@
         holidaysData = data.holidays || [];
 
         renderStudentOptions();
+        renderSeasonStudentOptions();
         
         document.getElementById('studentCount').textContent =
           data.students.length;
@@ -835,6 +910,34 @@ renderSeasonFees(seasonFeesData);
       `${student.name}｜${student.grade || '未設定年級'}`;
 
     seasonStudentFilter.appendChild(seasonOption);
+
+  });
+
+}
+
+    function renderSeasonStudentOptions() {
+
+  const seasonStudent =
+    document.getElementById('seasonStudent');
+
+  if (!seasonStudent) {
+    return;
+  }
+
+  seasonStudent.innerHTML =
+    '<option value="">請選擇學生</option>';
+
+  studentsData.forEach(student => {
+
+    const option =
+      document.createElement('option');
+
+    option.value = student.id;
+
+    option.textContent =
+      `${student.name}｜${student.grade || '未設定年級'}`;
+
+    seasonStudent.appendChild(option);
 
   });
 
@@ -952,6 +1055,13 @@ renderSeasonFees(seasonFeesData);
           ${item.billed ? '✅ 已開單' : '⬜ 未開單'}
         </div>
 
+<button
+  type="button"
+  class="edit-season-btn"
+  data-id="${item.id}">
+  ✏️ 編輯
+</button>
+
       </div>
     `;
 
@@ -1068,6 +1178,22 @@ document
 document
   .getElementById('addMonthlyBtn')
   .addEventListener('click', function () {
+
+    document
+  .getElementById('addSeasonBtn')
+  .addEventListener('click', function () {
+
+    document.getElementById('seasonForm').style.display = 'block';
+
+    document
+      .getElementById('seasonForm')
+      .scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+
+  });
+    
 
     editingMonthlyId = '';
     selectedStudentGrade = '';
