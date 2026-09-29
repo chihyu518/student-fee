@@ -965,10 +965,7 @@ const payload = {
 
       const responseText = await response.text();
 
-alert(
-  'GAS 回傳內容：\n' +
-  responseText.substring(0, 500)
-);
+console.log('GAS 回傳內容：', responseText);
 
 const result = JSON.parse(responseText);
 
