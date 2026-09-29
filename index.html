@@ -706,6 +706,7 @@
 }
     
     let monthlyFeesData = [];
+    let seasonFeesData = [];
     let studentsData = [];
     let feeSettingsData = [];
     let holidaysData = [];
@@ -732,6 +733,7 @@
         }
 
         monthlyFeesData = data.monthlyFees;
+        seasonFeesData = data.seasonFees || [];
         studentsData = data.students;
         feeSettingsData = data.feeSettings;
         holidaysData = data.holidays || [];
