@@ -1995,9 +1995,60 @@ document
   });
     
     
-    loadData();
+loadData();
 
-  </script>
+function updateSeasonEndDatePreview() {
+
+  const startDate =
+    document.getElementById('seasonStartDate').value;
+
+  const totalLessons =
+    document.getElementById('seasonTotalLessons').value;
+
+  const classDays =
+    Array.from(
+      document.querySelectorAll(
+        '#seasonClassDays input[type="checkbox"]:checked'
+      )
+    ).map(input => input.value);
+
+  const endDate =
+    calculateSeasonEndDate(
+      startDate,
+      classDays,
+      totalLessons
+    );
+
+  document.getElementById('seasonEndDate').value =
+    endDate;
+}
+
+document
+  .getElementById('seasonStartDate')
+  .addEventListener(
+    'change',
+    updateSeasonEndDatePreview
+  );
+
+document
+  .getElementById('seasonTotalLessons')
+  .addEventListener(
+    'input',
+    updateSeasonEndDatePreview
+  );
+
+document
+  .querySelectorAll(
+    '#seasonClassDays input[type="checkbox"]'
+  )
+  .forEach(checkbox => {
+    checkbox.addEventListener(
+      'change',
+      updateSeasonEndDatePreview
+    );
+  });
+
+</script>
   
 
 
