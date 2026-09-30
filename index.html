@@ -637,6 +637,11 @@
   </label>
 
 </div>
+
+    <label style="display:block; margin-bottom:12px;">
+  <input type="checkbox" id="seasonTextbook">
+  📖 教材
+</label>
     
     <input
       type="date"
@@ -1307,6 +1312,9 @@ document
     const billed =
       document.getElementById('seasonBilled').checked;
 
+    const textbook =
+  document.getElementById('seasonTextbook').checked;
+    
     if (!studentId) {
       alert('請選擇學生');
       return;
@@ -1391,6 +1399,7 @@ document
       document.getElementById('seasonEndDate').value = '';
       document.getElementById('seasonTotalLessons').value = '';
       document.getElementById('seasonBilled').checked = false;
+      document.getElementById('seasonTextbook').checked = false;
 
       document.getElementById('seasonForm').style.display = 'none';
 
@@ -1466,6 +1475,9 @@ document
     document.getElementById('seasonBilled').checked =
       item.billed === true;
 
+    document.getElementById('seasonTextbook').checked =
+  item.textbook === true;
+    
     document.getElementById('seasonForm').style.display = 'block';
 
     document
