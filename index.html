@@ -581,6 +581,20 @@
       <option value="第5期">第5期</option>
     </select>
 
+    <select id="seasonTeacher">
+  <option value="">請選擇老師</option>
+  <option value="政儒 老師">政儒 老師</option>
+  <option value="叮噹 老師">叮噹 老師</option>
+  <option value="卓杰 老師">卓杰 老師</option>
+  <option value="林沖 老師">林沖 老師</option>
+  <option value="Bonnie 老師">Bonnie 老師</option>
+  <option value="Sandy 老師">Sandy 老師</option>
+  <option value="Frank 老師">Frank 老師</option>
+  <option value="Ariel 老師">Ariel 老師</option>
+  <option value="Flora 老師">Flora 老師</option>
+  <option value="Amanda 老師">Amanda 老師</option>
+</select>
+    
     <input
       type="date"
       id="seasonStartDate"
@@ -1228,6 +1242,9 @@ document
     const period =
       document.getElementById('seasonPeriod').value;
 
+    const teacher =
+  document.getElementById('seasonTeacher').value;
+    
     const startDate =
       document.getElementById('seasonStartDate').value;
 
@@ -1273,6 +1290,7 @@ document
       studentName: student.name,
       grade: student.grade || '',
       period: period,
+      teacher: teacher,
       startDate: startDate,
       endDate: endDate,
       totalLessons: totalLessons,
@@ -1309,11 +1327,12 @@ document
       editingSeasonId = '';
 
       document.getElementById('seasonStudent').value = '';
-document.getElementById('seasonPeriod').value = '';
-document.getElementById('seasonStartDate').value = '';
-document.getElementById('seasonEndDate').value = '';
-document.getElementById('seasonTotalLessons').value = '';
-document.getElementById('seasonBilled').checked = false;
+      document.getElementById('seasonPeriod').value = '';
+      document.getElementById('seasonTeacher').value = '';
+      document.getElementById('seasonStartDate').value = '';
+      document.getElementById('seasonEndDate').value = '';
+      document.getElementById('seasonTotalLessons').value = '';
+      document.getElementById('seasonBilled').checked = false;
 
       document.getElementById('seasonForm').style.display = 'none';
 
@@ -1366,6 +1385,9 @@ document.getElementById('seasonBilled').checked = false;
 
     document.getElementById('seasonPeriod').value =
       item.period || '';
+
+    document.getElementById('seasonTeacher').value =
+  item.teacher || '';
 
     document.getElementById('seasonStartDate').value =
       item.startDate || '';
