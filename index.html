@@ -1400,8 +1400,6 @@ document
 document.getElementById('seasonEndDate').value =
   endDate;
 
-    const totalLessons =
-      document.getElementById('seasonTotalLessons').value;
 
     const billed =
       document.getElementById('seasonBilled').checked;
@@ -2005,7 +2003,8 @@ function updateSeasonEndDatePreview() {
   const startDate =
     document.getElementById('seasonStartDate').value;
 
- 
+ const totalLessons =
+  document.getElementById('seasonTotalLessons').value;
 
   const classDays =
     Array.from(
