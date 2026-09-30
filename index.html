@@ -679,6 +679,7 @@
       type="date"
       id="seasonEndDate"
       placeholder="結束日期"
+      readonly
     >
 
     <input
@@ -897,6 +898,66 @@
   }
 
   return count;
+}
+
+    function calculateSeasonEndDate(startDate, classDays, totalLessons) {
+
+  if (!startDate || !classDays || classDays.length === 0 || !totalLessons) {
+    return '';
+  }
+
+  const targetWeekdays = classDays
+    .map(day => weekdayMap[day])
+    .filter(day => day !== undefined);
+
+  if (targetWeekdays.length === 0) {
+    return '';
+  }
+
+  let currentDate = new Date(startDate + 'T00:00:00');
+  let count = 0;
+
+  while (count < Number(totalLessons)) {
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
+    const day = currentDate.getDate();
+
+    const weekday = currentDate.getDay();
+
+    const nationalHolidays =
+      String(year) === '2026'
+        ? holidays2026
+        : String(year) === '2027'
+          ? holidays2027
+          : [];
+
+    const customHolidays = holidaysData
+      .filter(holiday => holiday.enabled)
+      .map(holiday => holiday.date);
+
+    const dateString =
+      `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+    const isHoliday =
+      nationalHolidays.includes(dateString) ||
+      customHolidays.includes(dateString);
+
+    if (
+      targetWeekdays.includes(weekday) &&
+      !isHoliday
+    ) {
+      count++;
+    }
+
+    if (count === Number(totalLessons)) {
+      return dateString;
+    }
+
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return '';
 }
     
     let monthlyFeesData = [];
@@ -1330,7 +1391,14 @@ document
       document.getElementById('seasonStartDate').value;
 
     const endDate =
-      document.getElementById('seasonEndDate').value;
+  calculateSeasonEndDate(
+    startDate,
+    classDays,
+    totalLessons
+  );
+
+document.getElementById('seasonEndDate').value =
+  endDate;
 
     const totalLessons =
       document.getElementById('seasonTotalLessons').value;
