@@ -662,6 +662,12 @@
   id="seasonTextbookInfo"
   placeholder="教材冊數及金額，例如：Book4/1600"
 >
+
+    <textarea
+  id="seasonNote"
+  placeholder="備註"
+  rows="3"
+></textarea>
     
     <input
       type="date"
@@ -1340,6 +1346,9 @@ document
 
     const textbookInfo =
   document.getElementById('seasonTextbookInfo').value;
+
+    const note =
+  document.getElementById('seasonNote').value;
     
     if (!studentId) {
       alert('請選擇學生');
@@ -1382,7 +1391,8 @@ document
       billed: billed,
       textbook: textbook,
       book: book,
-      textbookInfo: textbookInfo
+      textbookInfo: textbookInfo,
+      note: note
     };
 
     try {
@@ -1431,6 +1441,7 @@ document
       document.getElementById('seasonTextbook').checked = false;
       document.getElementById('seasonBook').value = '';
       document.getElementById('seasonTextbookInfo').value = '';
+      document.getElementById('seasonNote').value = '';
 
       document.getElementById('seasonForm').style.display = 'none';
 
@@ -1514,6 +1525,9 @@ document
 
     document.getElementById('seasonTextbookInfo').value =
   item.textbookInfo || '';
+
+    document.getElementById('seasonNote').value =
+  item.note || '';
     
     
     document.getElementById('seasonForm').style.display = 'block';
