@@ -1063,6 +1063,13 @@ renderSeasonFees(seasonFeesData);
   ✏️ 編輯
 </button>
 
+<button
+  type="button"
+  class="delete-season-btn"
+  data-id="${item.id}">
+  🗑️ 刪除
+</button>
+
       </div>
     `;
 
@@ -1380,6 +1387,66 @@ document.getElementById('seasonBilled').checked = false;
         behavior: 'smooth',
         block: 'start'
       });
+
+  });
+
+    document
+  .getElementById('seasonList')
+  .addEventListener('click', async function (event) {
+
+    const button = event.target.closest('.delete-season-btn');
+
+    if (!button) {
+      return;
+    }
+
+    const id = button.dataset.id;
+
+    if (!id) {
+      alert('找不到這筆季收資料');
+      return;
+    }
+
+    const confirmed = confirm(
+      '確定要刪除這筆季收資料嗎？'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify({
+          action: 'deleteSeasonFee',
+          id: id
+        })
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(
+          result.error || '季收刪除失敗'
+        );
+      }
+
+      alert('季收刪除成功！');
+
+      await loadData();
+
+    } catch (error) {
+
+      alert(
+        '季收刪除失敗：' + error.message
+      );
+
+    }
 
   });
     
