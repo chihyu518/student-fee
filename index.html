@@ -642,6 +642,20 @@
   <input type="checkbox" id="seasonTextbook">
   📖 教材
 </label>
+
+    <select id="seasonBook">
+  <option value="">請選擇冊數</option>
+  <option value="A1">A1</option>
+  <option value="A2">A2</option>
+  <option value="A3">A3</option>
+  <option value="B1">B1</option>
+  <option value="Book2">Book2</option>
+  <option value="Book3">Book3</option>
+  <option value="Book4">Book4</option>
+  <option value="Book5">Book5</option>
+  <option value="Book6">Book6</option>
+  <option value="Book7">Book7</option>
+</select>
     
     <input
       type="date"
@@ -1314,6 +1328,9 @@ document
 
     const textbook =
   document.getElementById('seasonTextbook').checked;
+
+    const book =
+  document.getElementById('seasonBook').value;
     
     if (!studentId) {
       alert('請選擇學生');
@@ -1354,7 +1371,8 @@ document
       endDate: endDate,
       totalLessons: totalLessons,
       billed: billed,
-      textbook: textbook
+      textbook: textbook,
+      book: book
     };
 
     try {
@@ -1401,6 +1419,7 @@ document
       document.getElementById('seasonTotalLessons').value = '';
       document.getElementById('seasonBilled').checked = false;
       document.getElementById('seasonTextbook').checked = false;
+      document.getElementById('seasonBook').value = '';
 
       document.getElementById('seasonForm').style.display = 'none';
 
@@ -1478,6 +1497,10 @@ document
 
     document.getElementById('seasonTextbook').checked =
   item.textbook === true;
+
+    document.getElementById('seasonBook').value =
+  item.book || '';
+    
     
     document.getElementById('seasonForm').style.display = 'block';
 
