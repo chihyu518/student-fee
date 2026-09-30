@@ -656,6 +656,12 @@
   <option value="Book6">Book6</option>
   <option value="Book7">Book7</option>
 </select>
+
+    <input
+  type="text"
+  id="seasonTextbookInfo"
+  placeholder="教材冊數及金額，例如：Book4/1600"
+>
     
     <input
       type="date"
@@ -1331,6 +1337,9 @@ document
 
     const book =
   document.getElementById('seasonBook').value;
+
+    const textbookInfo =
+  document.getElementById('seasonTextbookInfo').value;
     
     if (!studentId) {
       alert('請選擇學生');
@@ -1372,7 +1381,8 @@ document
       totalLessons: totalLessons,
       billed: billed,
       textbook: textbook,
-      book: book
+      book: book,
+      textbookInfo: textbookInfo
     };
 
     try {
@@ -1420,6 +1430,7 @@ document
       document.getElementById('seasonBilled').checked = false;
       document.getElementById('seasonTextbook').checked = false;
       document.getElementById('seasonBook').value = '';
+      document.getElementById('seasonTextbookInfo').value = '';
 
       document.getElementById('seasonForm').style.display = 'none';
 
@@ -1500,6 +1511,9 @@ document
 
     document.getElementById('seasonBook').value =
   item.book || '';
+
+    document.getElementById('seasonTextbookInfo').value =
+  item.textbookInfo || '';
     
     
     document.getElementById('seasonForm').style.display = 'block';
