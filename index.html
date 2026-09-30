@@ -594,6 +594,49 @@
   <option value="Flora 老師">Flora 老師</option>
   <option value="Amanda 老師">Amanda 老師</option>
 </select>
+
+    <div id="seasonClassDays" style="margin-top:12px; margin-bottom:12px;">
+
+  <div style="margin-bottom:6px;">
+    📆 上課日
+  </div>
+
+  <label>
+    <input type="checkbox" name="seasonClassDay" value="星期一">
+    星期一
+  </label>
+
+  <label>
+    <input type="checkbox" name="seasonClassDay" value="星期二">
+    星期二
+  </label>
+
+  <label>
+    <input type="checkbox" name="seasonClassDay" value="星期三">
+    星期三
+  </label>
+
+  <label>
+    <input type="checkbox" name="seasonClassDay" value="星期四">
+    星期四
+  </label>
+
+  <label>
+    <input type="checkbox" name="seasonClassDay" value="星期五">
+    星期五
+  </label>
+
+  <label>
+    <input type="checkbox" name="seasonClassDay" value="星期六">
+    星期六
+  </label>
+
+  <label>
+    <input type="checkbox" name="seasonClassDay" value="星期日">
+    星期日
+  </label>
+
+</div>
     
     <input
       type="date"
@@ -1244,6 +1287,13 @@ document
 
     const teacher =
   document.getElementById('seasonTeacher').value;
+
+    const classDays =
+  Array.from(
+    document.querySelectorAll(
+      'input[name="seasonClassDay"]:checked'
+    )
+  ).map(checkbox => checkbox.value);
     
     const startDate =
       document.getElementById('seasonStartDate').value;
@@ -1291,6 +1341,7 @@ document
       grade: student.grade || '',
       period: period,
       teacher: teacher,
+      classDays: classDays,
       startDate: startDate,
       endDate: endDate,
       totalLessons: totalLessons,
@@ -1329,6 +1380,13 @@ document
       document.getElementById('seasonStudent').value = '';
       document.getElementById('seasonPeriod').value = '';
       document.getElementById('seasonTeacher').value = '';
+
+      document
+  .querySelectorAll('input[name="seasonClassDay"]')
+  .forEach(checkbox => {
+    checkbox.checked = false;
+  });
+      
       document.getElementById('seasonStartDate').value = '';
       document.getElementById('seasonEndDate').value = '';
       document.getElementById('seasonTotalLessons').value = '';
@@ -1389,6 +1447,13 @@ document
     document.getElementById('seasonTeacher').value =
   item.teacher || '';
 
+    document
+  .querySelectorAll('input[name="seasonClassDay"]')
+  .forEach(checkbox => {
+    checkbox.checked =
+      (item.classDays || []).includes(checkbox.value);
+  });
+    
     document.getElementById('seasonStartDate').value =
       item.startDate || '';
 
