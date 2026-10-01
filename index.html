@@ -1390,6 +1390,9 @@ document
     const startDate =
       document.getElementById('seasonStartDate').value;
 
+    const totalLessons =
+  document.getElementById('seasonTotalLessons').value;
+    
     const endDate =
   calculateSeasonEndDate(
     startDate,
@@ -1438,8 +1441,6 @@ document.getElementById('seasonEndDate').value =
     const isEditing =
       editingSeasonId !== '';
 
-    const totalLessons =
-  document.getElementById('seasonTotalLessons').value;
     
     const payload = {
       action: isEditing
