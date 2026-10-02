@@ -1164,6 +1164,34 @@ renderSeasonFees(seasonFeesData);
   }).join('');
 }
 
+    function updateSeasonStats(seasonFees) {
+
+  const stats = document.getElementById('seasonStats');
+
+  const total = seasonFees.length;
+
+  const billed = seasonFees.filter(
+    item => item.billed
+  ).length;
+
+  const unbilled = total - billed;
+
+  const lessons = seasonFees.reduce(
+    (sum, item) => sum + Number(item.totalLessons || 0),
+    0
+  );
+
+  stats.innerHTML = `
+    📊 季收：${total} 筆　
+    📚 堂數：${lessons} 堂　
+    ✅ 已開單：${billed} 筆　
+    ⬜ 未開單：${unbilled} 筆
+  `;
+}
+
+
+function renderSeasonFees(seasonFees) {
+  
     function renderSeasonFees(seasonFees) {
 
   const seasonList = document.getElementById('seasonList');
@@ -1298,6 +1326,7 @@ renderSeasonFees(seasonFeesData);
   });
 
   renderSeasonFees(filteredFees);
+  updateSeasonStats(filteredFees);
 }
     
         function showPage(pageId, button) {
