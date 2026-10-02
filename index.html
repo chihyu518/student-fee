@@ -999,6 +999,10 @@
 
         monthlyFeesData = data.monthlyFees;
         seasonFeesData = data.seasonFees || [];
+        seasonFeesData.sort((a, b) =>
+  (b.startDate || '').localeCompare(a.startDate || '')
+);
+        
         studentsData = data.students;
         feeSettingsData = data.feeSettings;
         holidaysData = data.holidays || [];
