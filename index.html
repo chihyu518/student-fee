@@ -1196,6 +1196,10 @@ renderSeasonFees(seasonFeesData);
             ${item.period || '未設定期別'}
           </span>
 
+<span class="monthly-tag">
+  👩‍🏫 ${item.teacher || '未設定老師'}
+</span>
+
         </div>
 
         <div class="monthly-content">
@@ -1205,6 +1209,10 @@ renderSeasonFees(seasonFeesData);
         <div class="monthly-content">
           📚 ${item.totalLessons ?? '未設定'} 堂
         </div>
+
+<div class="monthly-content">
+  📅 上課日：${item.classDays ? item.classDays.join('、') : '未設定'}
+</div>
 
         <div class="monthly-status">
           ${item.billed ? '✅ 已開單' : '⬜ 未開單'}
