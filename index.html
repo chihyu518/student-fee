@@ -743,6 +743,12 @@
     <option value="">全部學生</option>
   </select>
 
+      <select id="seasonBilledFilter">
+  <option value="">全部開單狀態</option>
+  <option value="billed">✅ 已開單</option>
+  <option value="unbilled">⬜ 未開單</option>
+</select>
+      
 </div>
 
       <div id="seasonStats">
@@ -1316,15 +1322,23 @@ updateSeasonStats(seasonFeesData);
   const selectedStudent =
     document.getElementById('seasonStudentFilter').value;
 
+        const selectedBilled =
+    document.getElementById('seasonBilledFilter').value;
+      
   const filteredFees = seasonFeesData.filter(item => {
 
     const matchGrade =
       !selectedGrade || item.grade === selectedGrade;
 
     const matchStudent =
-      !selectedStudent || item.studentId === selectedStudent;
+  !selectedStudent || item.studentId === selectedStudent;
 
-    return matchGrade && matchStudent;
+const matchBilled =
+  !selectedBilled ||
+  (selectedBilled === 'billed' && item.billed) ||
+  (selectedBilled === 'unbilled' && !item.billed);
+
+return matchGrade && matchStudent && matchBilled;
 
   });
 
@@ -1392,6 +1406,10 @@ document
 document
   .getElementById('seasonStudentFilter')
   .addEventListener('change', filterSeasonFees);
+
+document
+  .getElementById('seasonBilledFilter')
+  .addEventListener('change', filterSeasonFees);    
     
 document
   .getElementById('addMonthlyBtn')
