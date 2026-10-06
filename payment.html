@@ -320,6 +320,13 @@
   const studentSelect =
     document.getElementById('studentSelect');
 
+  const studentSearch =
+    document.getElementById('studentSearch');
+
+
+  // 儲存全部學生
+  let allStudents = [];
+
 
   // =========================
   // 開啟新增收款表單
@@ -347,6 +354,83 @@
     addPaymentBtn.style.display = 'block';
 
   });
+
+
+  // =========================
+  // 搜尋學生
+  // =========================
+
+  studentSearch.addEventListener('input', function () {
+
+    const keyword =
+      studentSearch.value.trim().toLowerCase();
+
+    renderStudents(keyword);
+
+  });
+
+
+  // =========================
+  // 顯示學生
+  // =========================
+
+  function renderStudents(keyword = '') {
+
+    studentSelect.innerHTML = '';
+
+    const filteredStudents =
+      allStudents.filter(function (student) {
+
+        const name =
+          String(student.name || '')
+            .toLowerCase();
+
+        const grade =
+          String(student.grade || '')
+            .toLowerCase();
+
+        return (
+          name.includes(keyword) ||
+          grade.includes(keyword)
+        );
+
+      });
+
+
+    if (filteredStudents.length === 0) {
+
+      const option =
+        document.createElement('option');
+
+      option.value = '';
+
+      option.textContent =
+        '找不到符合的學生';
+
+      studentSelect.appendChild(option);
+
+      return;
+    }
+
+
+    filteredStudents.forEach(function (student) {
+
+      const option =
+        document.createElement('option');
+
+      option.value = student.id;
+
+      option.textContent =
+        student.name +
+        (student.grade
+          ? '｜' + student.grade
+          : '');
+
+      studentSelect.appendChild(option);
+
+    });
+
+  }
 
 
   // =========================
@@ -380,12 +464,12 @@
       }
 
 
-      const students =
+      allStudents =
         result.students || [];
 
 
       // 依年級、姓名排序
-      students.sort(function (a, b) {
+      allStudents.sort(function (a, b) {
 
         const gradeCompare =
           String(a.grade || '')
@@ -407,33 +491,12 @@
       });
 
 
-      studentSelect.innerHTML = `
-        <option value="">
-          請選擇學生
-        </option>
-      `;
-
-
-      students.forEach(function (student) {
-
-        const option =
-          document.createElement('option');
-
-        option.value = student.id;
-
-        option.textContent =
-          student.name +
-          (student.grade
-            ? '｜' + student.grade
-            : '');
-
-        studentSelect.appendChild(option);
-
-      });
+      // 顯示全部學生
+      renderStudents();
 
 
       console.log(
-        '學生數量：' + students.length
+        '學生數量：' + allStudents.length
       );
 
     } catch (error) {
