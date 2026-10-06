@@ -434,13 +434,17 @@ let editingPaymentId = null;
 
   addPaymentBtn.addEventListener('click', function () {
 
-    paymentForm.style.display = 'block';
+  editingPaymentId = null;
 
-    addPaymentBtn.style.display = 'none';
+  paymentForm.style.display = 'block';
 
-    loadStudents();
+  addPaymentBtn.style.display = 'none';
 
-  });
+  savePaymentBtn.textContent = '儲存';
+
+  loadStudents();
+
+});
 
 
   // =========================
@@ -448,6 +452,8 @@ let editingPaymentId = null;
   // =========================
 
   cancelPaymentBtn.addEventListener('click', function () {
+
+    editingPaymentId = null;
 
     paymentForm.style.display = 'none';
 
@@ -725,8 +731,13 @@ let editingPaymentId = null;
           body: JSON.stringify({
 
             action:
-              'createPaymentRecord',
+  editingPaymentId
+    ? 'updatePaymentRecord'
+    : 'createPaymentRecord',
 
+id:
+  editingPaymentId,
+            
             studentId:
               studentId,
 
@@ -840,6 +851,82 @@ let editingPaymentId = null;
 // 載入收款紀錄
 // =========================
 
+    // =========================
+// 開始編輯收款紀錄
+// =========================
+
+async function startEditPayment(data) {
+
+  editingPaymentId = data.id;
+
+  // 顯示表單
+  paymentForm.style.display = 'block';
+
+  // 隱藏新增按鈕
+  addPaymentBtn.style.display = 'none';
+
+  // 載入學生
+  await loadStudents();
+
+  // 帶入學生
+  studentSearch.value = data.student || '';
+
+  let foundStudent = null;
+
+  Array.from(studentSelect.options).forEach(function (option) {
+
+    const name =
+      option.textContent
+        .split('｜')[0]
+        .trim();
+
+    if (name === data.student) {
+      foundStudent = option;
+    }
+
+  });
+
+  if (foundStudent) {
+    studentSelect.value =
+      foundStudent.value;
+  }
+
+  // 帶入收款日期
+  document.getElementById(
+    'paymentDate'
+  ).value =
+    data.paymentDate || '';
+
+  // 帶入收款金額
+  document.getElementById(
+    'paymentAmount'
+  ).value =
+    data.amount ?? '';
+
+  // 帶入匯款後五碼
+  document.getElementById(
+    'paymentLastFive'
+  ).value =
+    data.lastFive || '';
+
+  // 帶入是否開收據
+  document.getElementById(
+    'paymentReceipt'
+  ).checked =
+    Boolean(data.receipt);
+
+  // 帶入備註
+  document.getElementById(
+    'paymentNote'
+  ).value =
+    data.note || '';
+
+  // 儲存按鈕改成「更新」
+  savePaymentBtn.textContent =
+    '更新';
+
+}
+    
 async function loadPaymentRecords() {
 
   const paymentList =
