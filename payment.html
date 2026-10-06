@@ -838,6 +838,8 @@ async function loadPaymentRecords() {
     .value
     .trim()
     .toLowerCase();
+
+    let displayedCount = 0;
     
     records.forEach(function (page) {
 
@@ -855,6 +857,8 @@ async function loadPaymentRecords() {
 ) {
   return;
 }
+
+      displayedCount++;
       
       const paymentDate =
         properties['📅 收款日期']
@@ -924,11 +928,26 @@ async function loadPaymentRecords() {
 
       `;
 
-      paymentList.appendChild(item);
+          paymentList.appendChild(item);
 
-    });
+  });
 
-  } catch (error) {
+
+  if (
+    searchKeyword &&
+    displayedCount === 0
+  ) {
+
+    paymentList.innerHTML = `
+      <div class="payment-item-empty">
+        🔍 找不到符合的收款紀錄
+      </div>
+    `;
+
+  }
+
+
+} catch (error) {
 
     console.error(
       '載入收款紀錄失敗：',
