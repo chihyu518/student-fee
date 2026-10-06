@@ -138,6 +138,36 @@
   background: #eee;
   color: #333;
 }
+
+    .payment-list {
+  margin-top: 20px;
+}
+
+.payment-item {
+  border: 1px solid #eee;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: #fafafa;
+}
+
+.payment-item-name {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.payment-item-row {
+  margin-top: 6px;
+  color: #555;
+  font-size: 14px;
+}
+
+.payment-item-empty {
+  text-align: center;
+  padding: 30px 10px;
+  color: #888;
+}
     
   </style>
 
@@ -294,9 +324,14 @@
 
 </div>
       
+  <div
+  id="paymentList"
+  class="payment-list"
+>
   <div class="empty">
-    目前沒有收款紀錄
+    載入收款紀錄中……
   </div>
+</div>
 
 </div>
 
@@ -669,6 +704,8 @@
 
       alert('💰 收款紀錄新增成功！');
 
+      loadPaymentRecords();
+
 
       // =========================
       // 清空表單
@@ -733,6 +770,158 @@
     }
 
   });
+
+    // =========================
+// 載入收款紀錄
+// =========================
+
+async function loadPaymentRecords() {
+
+  const paymentList =
+    document.getElementById('paymentList');
+
+  paymentList.innerHTML = `
+    <div class="payment-item-empty">
+      載入收款紀錄中……
+    </div>
+  `;
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL + '?action=getPaymentRecords'
+      );
+
+    const result =
+      await response.json();
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message ||
+        '收款紀錄讀取失敗'
+      );
+
+    }
+
+    const records =
+      result.data?.results || [];
+
+    if (records.length === 0) {
+
+      paymentList.innerHTML = `
+        <div class="payment-item-empty">
+          目前沒有收款紀錄
+        </div>
+      `;
+
+      return;
+    }
+
+    paymentList.innerHTML = '';
+
+    records.forEach(function (page) {
+
+      const properties =
+        page.properties || {};
+
+      const student =
+        properties['👤 學生']
+          ?.title?.[0]
+          ?.plain_text || '';
+
+      const paymentDate =
+        properties['📅 收款日期']
+          ?.date?.start || '';
+
+      const amount =
+        properties['💰 收款金額']
+          ?.number;
+
+      const lastFive =
+        properties['💳 匯款後五碼']
+          ?.rich_text?.[0]
+          ?.plain_text || '';
+
+      const receipt =
+        properties['🧾 是否開收據']
+          ?.checkbox || false;
+
+      const note =
+        properties['📝 備註']
+          ?.rich_text?.[0]
+          ?.plain_text || '';
+
+      const item =
+        document.createElement('div');
+
+      item.className =
+        'payment-item';
+
+      item.innerHTML = `
+
+        <div class="payment-item-name">
+          👤 ${student}
+        </div>
+
+        <div class="payment-item-row">
+          📅 收款日期：
+          ${paymentDate || '—'}
+        </div>
+
+        <div class="payment-item-row">
+          💰 收款金額：
+          ${amount !== null && amount !== undefined
+            ? '$' + amount
+            : '—'}
+        </div>
+
+        <div class="payment-item-row">
+          💳 匯款後五碼：
+          ${lastFive || '—'}
+        </div>
+
+        <div class="payment-item-row">
+          🧾 收據：
+          ${receipt ? '已開' : '未開'}
+        </div>
+
+        ${
+          note
+            ? `
+              <div class="payment-item-row">
+                📝 備註：${note}
+              </div>
+            `
+            : ''
+        }
+
+      `;
+
+      paymentList.appendChild(item);
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      '載入收款紀錄失敗：',
+      error
+    );
+
+    paymentList.innerHTML = `
+      <div class="payment-item-empty">
+        收款紀錄載入失敗：
+        ${error.message}
+      </div>
+    `;
+
+  }
+
+}
+
+    loadPaymentRecords();
     
 </script>
   
