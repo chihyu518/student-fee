@@ -877,6 +877,12 @@ async function loadPaymentRecords() {
     .trim()
     .toLowerCase();
 
+    const monthFilter =
+  document.getElementById('paymentMonthFilter').value;
+
+const receiptFilter =
+  document.getElementById('paymentReceiptFilter').value;
+    
     let displayedCount = 0;
     
     records.forEach(function (page) {
@@ -902,6 +908,22 @@ async function loadPaymentRecords() {
         properties['📅 收款日期']
           ?.date?.start || '';
 
+      const paymentMonth =
+  paymentDate
+    ? String(
+        Number(
+          paymentDate.split('-')[1]
+        )
+      )
+    : '';
+
+      if (
+  monthFilter &&
+  paymentMonth !== monthFilter
+) {
+  return;
+}
+      
       const amount =
         properties['💰 收款金額']
           ?.number;
@@ -914,6 +936,20 @@ async function loadPaymentRecords() {
       const receipt =
         properties['🧾 是否開收據']
           ?.checkbox || false;
+
+      if (
+  receiptFilter === 'yes' &&
+  !receipt
+) {
+  return;
+}
+
+if (
+  receiptFilter === 'no' &&
+  receipt
+) {
+  return;
+}
 
       const note =
         properties['📝 備註']
@@ -1015,7 +1051,28 @@ paymentSearch.addEventListener(
 );
 
 
-loadPaymentRecords();
+    document
+      .getElementById('paymentSearch')
+      .addEventListener('input', function () {
+        loadPaymentRecords();
+      });
+
+
+    document
+      .getElementById('paymentMonthFilter')
+      .addEventListener('change', function () {
+        loadPaymentRecords();
+      });
+
+
+    document
+      .getElementById('paymentReceiptFilter')
+      .addEventListener('change', function () {
+        loadPaymentRecords();
+      });
+
+
+    loadPaymentRecords();
     
 </script>
   
