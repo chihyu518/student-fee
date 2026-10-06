@@ -69,6 +69,18 @@
       color: #888;
     }
 
+    .add-payment-btn {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 13px;
+  background: #333;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+    
   </style>
 
 </head>
@@ -90,11 +102,19 @@
 
     <div class="card">
 
-      <div class="empty">
-        目前沒有收款紀錄
-      </div>
+  <button
+    type="button"
+    id="addPaymentBtn"
+    class="add-payment-btn"
+  >
+    ＋ 新增收款
+  </button>
 
-    </div>
+  <div class="empty">
+    目前沒有收款紀錄
+  </div>
+
+</div>
 
   </div>
 
