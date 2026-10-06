@@ -80,6 +80,64 @@
   cursor: pointer;
   margin-bottom: 20px;
 }
+
+    .payment-form {
+  display: none;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.form-group textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.form-actions button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.save-btn {
+  background: #333;
+  color: white;
+}
+
+.cancel-btn {
+  background: #eee;
+  color: #333;
+}
     
   </style>
 
@@ -110,6 +168,125 @@
     ＋ 新增收款
   </button>
 
+      <div
+  id="paymentForm"
+  class="payment-form"
+>
+
+  <div class="form-group">
+
+    <label for="studentSelect">
+      👤 學生
+    </label>
+
+    <select id="studentSelect">
+      <option value="">
+        請選擇學生
+      </option>
+    </select>
+
+  </div>
+
+
+  <div class="form-group">
+
+    <label for="paymentDate">
+      📅 收款日期
+    </label>
+
+    <input
+      id="paymentDate"
+      type="date"
+    >
+
+  </div>
+
+
+  <div class="form-group">
+
+    <label for="paymentAmount">
+      💰 收款金額
+    </label>
+
+    <input
+      id="paymentAmount"
+      type="number"
+      min="0"
+      placeholder="請輸入收款金額"
+    >
+
+  </div>
+
+
+  <div class="form-group">
+
+    <label for="paymentLastFive">
+      💳 匯款後五碼
+    </label>
+
+    <input
+      id="paymentLastFive"
+      type="text"
+      maxlength="5"
+      placeholder="請輸入後五碼"
+    >
+
+  </div>
+
+
+  <div class="form-group">
+
+    <label>
+      🧾 是否開收據
+    </label>
+
+    <label>
+      <input
+        id="paymentReceipt"
+        type="checkbox"
+      >
+      已開收據
+    </label>
+
+  </div>
+
+
+  <div class="form-group">
+
+    <label for="paymentNote">
+      📝 備註
+    </label>
+
+    <textarea
+      id="paymentNote"
+      placeholder="可輸入備註"
+    ></textarea>
+
+  </div>
+
+
+  <div class="form-actions">
+
+    <button
+      type="button"
+      class="cancel-btn"
+      id="cancelPaymentBtn"
+    >
+      取消
+    </button>
+
+    <button
+      type="button"
+      class="save-btn"
+      id="savePaymentBtn"
+    >
+      儲存
+    </button>
+
+  </div>
+
+</div>
+      
   <div class="empty">
     目前沒有收款紀錄
   </div>
@@ -118,6 +295,164 @@
 
   </div>
 
+  <script>
+
+  const API_URL =
+    'https://script.google.com/macros/s/AKfycbyFhc5Sj2lj_XyJTlN61RVvumxH7HH0bgc4ejYNH6FFGGKHR2npLNJwmx2yyL-SL56W/exec';
+
+
+  const addPaymentBtn =
+    document.getElementById('addPaymentBtn');
+
+  const paymentForm =
+    document.getElementById('paymentForm');
+
+  const cancelPaymentBtn =
+    document.getElementById('cancelPaymentBtn');
+
+  const studentSelect =
+    document.getElementById('studentSelect');
+
+
+  // =========================
+  // 開啟新增收款表單
+  // =========================
+
+  addPaymentBtn.addEventListener('click', function () {
+
+    paymentForm.style.display = 'block';
+
+    addPaymentBtn.style.display = 'none';
+
+    loadStudents();
+
+  });
+
+
+  // =========================
+  // 取消
+  // =========================
+
+  cancelPaymentBtn.addEventListener('click', function () {
+
+    paymentForm.style.display = 'none';
+
+    addPaymentBtn.style.display = 'block';
+
+  });
+
+
+  // =========================
+  // 載入學生名單
+  // =========================
+
+  async function loadStudents() {
+
+    studentSelect.innerHTML = `
+      <option value="">
+        載入學生名單中……
+      </option>
+    `;
+
+    try {
+
+      const response =
+        await fetch(
+          API_URL + '?action=getStudents'
+        );
+
+      const result =
+        await response.json();
+
+      if (!result.success) {
+
+        throw new Error(
+          result.message || '學生名單讀取失敗'
+        );
+
+      }
+
+
+      const students =
+        result.students || [];
+
+
+      // 依年級、姓名排序
+      students.sort(function (a, b) {
+
+        const gradeCompare =
+          String(a.grade || '')
+            .localeCompare(
+              String(b.grade || ''),
+              'zh-Hant'
+            );
+
+        if (gradeCompare !== 0) {
+          return gradeCompare;
+        }
+
+        return String(a.name || '')
+          .localeCompare(
+            String(b.name || ''),
+            'zh-Hant'
+          );
+
+      });
+
+
+      studentSelect.innerHTML = `
+        <option value="">
+          請選擇學生
+        </option>
+      `;
+
+
+      students.forEach(function (student) {
+
+        const option =
+          document.createElement('option');
+
+        option.value = student.id;
+
+        option.textContent =
+          student.name +
+          (student.grade
+            ? '｜' + student.grade
+            : '');
+
+        studentSelect.appendChild(option);
+
+      });
+
+
+      console.log(
+        '學生數量：' + students.length
+      );
+
+    } catch (error) {
+
+      console.error(
+        '載入學生名單失敗：',
+        error
+      );
+
+      studentSelect.innerHTML = `
+        <option value="">
+          學生名單載入失敗
+        </option>
+      `;
+
+      alert(
+        '學生名單載入失敗：' +
+        error.message
+      );
+
+    }
+
+  }
+
+</script>
+  
 </body>
 
 </html>
