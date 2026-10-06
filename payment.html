@@ -833,6 +833,12 @@ async function loadPaymentRecords() {
 
     paymentList.innerHTML = '';
 
+    const searchKeyword =
+  document.getElementById('paymentSearch')
+    .value
+    .trim()
+    .toLowerCase();
+    
     records.forEach(function (page) {
 
       const properties =
@@ -843,6 +849,13 @@ async function loadPaymentRecords() {
           ?.title?.[0]
           ?.plain_text || '';
 
+      if (
+  searchKeyword &&
+  !student.toLowerCase().includes(searchKeyword)
+) {
+  return;
+}
+      
       const paymentDate =
         properties['📅 收款日期']
           ?.date?.start || '';
@@ -933,7 +946,19 @@ async function loadPaymentRecords() {
 
 }
 
+    const paymentSearch =
+  document.getElementById('paymentSearch');
+
+
+paymentSearch.addEventListener(
+  'input',
+  function () {
     loadPaymentRecords();
+  }
+);
+
+
+loadPaymentRecords();
     
 </script>
   
