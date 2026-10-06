@@ -521,6 +521,219 @@
 
   }
 
+      // =========================
+  // 儲存收款紀錄
+  // =========================
+
+  const savePaymentBtn =
+    document.getElementById('savePaymentBtn');
+
+
+  savePaymentBtn.addEventListener('click', async function () {
+
+    const selectedOption =
+      studentSelect.options[
+        studentSelect.selectedIndex
+      ];
+
+
+    const studentId =
+      studentSelect.value;
+
+    const studentText =
+      selectedOption
+        ? selectedOption.textContent
+        : '';
+
+
+    const studentName =
+      studentText.split('｜')[0];
+
+
+    const paymentDate =
+      document.getElementById('paymentDate').value;
+
+    const paymentAmount =
+      document.getElementById('paymentAmount').value;
+
+    const paymentLastFive =
+      document.getElementById('paymentLastFive').value.trim();
+
+    const paymentReceipt =
+      document.getElementById('paymentReceipt').checked;
+
+    const paymentNote =
+      document.getElementById('paymentNote').value.trim();
+
+
+    // =========================
+    // 檢查資料
+    // =========================
+
+    if (!studentId) {
+
+      alert('請選擇學生');
+
+      return;
+
+    }
+
+
+    if (!paymentDate) {
+
+      alert('請選擇收款日期');
+
+      return;
+
+    }
+
+
+    if (
+      paymentAmount === '' ||
+      Number(paymentAmount) < 0
+    ) {
+
+      alert('請輸入收款金額');
+
+      return;
+
+    }
+
+
+    // =========================
+    // 暫時停用按鈕
+    // =========================
+
+    savePaymentBtn.disabled = true;
+
+    savePaymentBtn.textContent =
+      '儲存中……';
+
+
+    try {
+
+      const response =
+        await fetch(API_URL, {
+
+          method: 'POST',
+
+          headers: {
+            'Content-Type':
+              'text/plain;charset=utf-8'
+          },
+
+          body: JSON.stringify({
+
+            action:
+              'createPaymentRecord',
+
+            studentId:
+              studentId,
+
+            studentName:
+              studentName,
+
+            paymentDate:
+              paymentDate,
+
+            paymentAmount:
+              paymentAmount,
+
+            paymentLastFive:
+              paymentLastFive,
+
+            paymentReceipt:
+              paymentReceipt,
+
+            paymentNote:
+              paymentNote
+
+          })
+
+        });
+
+
+      const result =
+        await response.json();
+
+
+      if (!result.success) {
+
+        throw new Error(
+          result.message ||
+          '新增收款紀錄失敗'
+        );
+
+      }
+
+
+      alert('💰 收款紀錄新增成功！');
+
+
+      // =========================
+      // 清空表單
+      // =========================
+
+      studentSearch.value = '';
+
+      studentSelect.value = '';
+
+      document.getElementById(
+        'paymentDate'
+      ).value = '';
+
+      document.getElementById(
+        'paymentAmount'
+      ).value = '';
+
+      document.getElementById(
+        'paymentLastFive'
+      ).value = '';
+
+      document.getElementById(
+        'paymentReceipt'
+      ).checked = false;
+
+      document.getElementById(
+        'paymentNote'
+      ).value = '';
+
+
+      renderStudents();
+
+
+      paymentForm.style.display =
+        'none';
+
+      addPaymentBtn.style.display =
+        'block';
+
+
+    } catch (error) {
+
+      console.error(
+        '新增收款失敗：',
+        error
+      );
+
+      alert(
+        '新增收款失敗：' +
+        error.message
+      );
+
+
+    } finally {
+
+      savePaymentBtn.disabled =
+        false;
+
+      savePaymentBtn.textContent =
+        '儲存';
+
+    }
+
+  });
+    
 </script>
   
 </body>
