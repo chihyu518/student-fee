@@ -157,6 +157,18 @@
   margin-bottom: 10px;
 }
 
+    .edit-payment-btn {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #eee;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+}
+    
 .payment-item-row {
   margin-top: 6px;
   color: #555;
@@ -956,6 +968,8 @@ if (
           ?.rich_text?.[0]
           ?.plain_text || '';
 
+      const recordId = page.id;
+      
       const item =
         document.createElement('div');
 
@@ -1000,9 +1014,36 @@ if (
             : ''
         }
 
-      `;
+            `;
 
-          paymentList.appendChild(item);
+      const editButton =
+        document.createElement('button');
+
+      editButton.type = 'button';
+      editButton.textContent = '✏️ 編輯';
+      editButton.className = 'edit-payment-btn';
+
+      editButton.addEventListener(
+        'click',
+        function () {
+
+          startEditPayment({
+            id: recordId,
+            student: student,
+            paymentDate: paymentDate,
+            amount: amount,
+            lastFive: lastFive,
+            receipt: receipt,
+            note: note
+          });
+
+        }
+      );
+
+
+      item.appendChild(editButton);
+
+      paymentList.appendChild(item);
 
   });
 
