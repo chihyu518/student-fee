@@ -437,6 +437,13 @@
           <span class="card-unit">筆</span>
         </div>
 
+        <div class="card">
+  <div class="card-icon">💵</div>
+  <div class="card-title">收款紀錄</div>
+  <span id="paymentCount" class="card-number">0</span>
+  <span class="card-unit">筆</span>
+</div>
+        
       </div>
 
       <div class="section">
@@ -1020,6 +1027,30 @@
         feeSettingsData = data.feeSettings;
         holidaysData = data.holidays || [];
 
+        // =========================
+// 取得收款紀錄筆數
+// =========================
+
+const paymentResponse =
+  await fetch(
+    API_URL + '?action=getPaymentRecords'
+  );
+
+const paymentResult =
+  await paymentResponse.json();
+
+const paymentRecords =
+  paymentResult.success &&
+  paymentResult.data &&
+  paymentResult.data.results
+    ? paymentResult.data.results
+    : [];
+
+document.getElementById(
+  'paymentCount'
+).textContent =
+  paymentRecords.length;
+        
         renderStudentOptions();
         renderSeasonStudentOptions();
         
