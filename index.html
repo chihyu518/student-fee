@@ -782,7 +782,8 @@
 
     // ⚠️ 把你剛才複製的 GAS /exec 網址貼在這裡
     const API_URL = 'https://script.google.com/macros/s/AKfycbzSbeATYxXHLjmKwOY0QLuBFnoaJEWpmcWL1N3Jp3CJGAJg8qCQ_ODyS92HPGyTrbi-ig/exec';
-
+    const PAYMENT_API_URL ='https://script.google.com/macros/s/AKfycbyFhc5Sj2lj_XyJTlN61RVvumxH7HH0bgc4ejYNH6FFGGKHR2npLNJwmx2yyL-SL56W/exec';
+    
     const holidays2026 = [
   "2026-01-01",
 
@@ -1033,7 +1034,7 @@
 
 const paymentResponse =
   await fetch(
-    API_URL + '?action=getPaymentRecords'
+    PAYMENT_API_URL + '?action=getPaymentRecords'
   );
 
 const paymentResult =
