@@ -1171,9 +1171,14 @@ if (
 
           try {
 
-            deleteButton.disabled = true;
-            deleteButton.textContent = '刪除中……';
+            if (deleteButton.dataset.deleting === 'true') {
+  return;
+}
 
+deleteButton.dataset.deleting = 'true';
+deleteButton.disabled = true;
+deleteButton.textContent = '刪除中……';
+            
             const response =
               await fetch(API_URL, {
 
@@ -1224,8 +1229,9 @@ if (
               error.message
             );
 
-            deleteButton.disabled = false;
-            deleteButton.textContent = '🗑️ 刪除';
+            deleteButton.dataset.deleting = 'false';
+deleteButton.disabled = false;
+deleteButton.textContent = '🗑️ 刪除';
 
           }
 
