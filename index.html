@@ -1042,7 +1042,7 @@ const paymentResult =
 const paymentRecords =
   paymentResult.success &&
   paymentResult.data &&
-  paymentResult.data.results
+  Array.isArray(paymentResult.data.results)
     ? paymentResult.data.results
     : [];
 
