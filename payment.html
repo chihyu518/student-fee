@@ -960,8 +960,16 @@ async function loadPaymentRecords() {
         API_URL + '?action=getPaymentRecords'
       );
 
-    const result =
-      await response.json();
+    const responseText =
+  await response.text();
+
+console.log(
+  '📥 收款紀錄 API 回應：',
+  responseText
+);
+
+const result =
+  JSON.parse(responseText);
 
     if (!result.success) {
 
