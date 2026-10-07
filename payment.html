@@ -168,6 +168,18 @@
   font-size: 14px;
   cursor: pointer;
 }
+
+    .delete-payment-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #eee;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+}
     
 .payment-item-row {
   margin-top: 6px;
@@ -1133,8 +1145,95 @@ if (
         }
       );
 
+            // =========================
+      // 刪除按鈕
+      // =========================
+
+      const deleteButton =
+        document.createElement('button');
+
+      deleteButton.type = 'button';
+      deleteButton.textContent = '🗑️ 刪除';
+      deleteButton.className = 'delete-payment-btn';
+
+      deleteButton.addEventListener(
+        'click',
+        async function () {
+
+          const confirmed =
+            confirm(
+              `確定要刪除「${student}」這筆收款紀錄嗎？`
+            );
+
+          if (!confirmed) {
+            return;
+          }
+
+          try {
+
+            deleteButton.disabled = true;
+            deleteButton.textContent = '刪除中……';
+
+            const response =
+              await fetch(API_URL, {
+
+                method: 'POST',
+
+                headers: {
+                  'Content-Type':
+                    'text/plain;charset=utf-8'
+                },
+
+                body: JSON.stringify({
+
+                  action:
+                    'deletePaymentRecord',
+
+                  id:
+                    recordId
+
+                })
+
+              });
+
+            const result =
+              await response.json();
+
+            if (!result.success) {
+
+              throw new Error(
+                result.message ||
+                '刪除收款紀錄失敗'
+              );
+
+            }
+
+            alert('🗑️ 收款紀錄刪除成功！');
+
+            loadPaymentRecords();
+
+          } catch (error) {
+
+            console.error(
+              '刪除收款紀錄失敗：',
+              error
+            );
+
+            alert(
+              '刪除失敗：' +
+              error.message
+            );
+
+            deleteButton.disabled = false;
+            deleteButton.textContent = '🗑️ 刪除';
+
+          }
+
+        }
+      );
 
       item.appendChild(editButton);
+      item.appendChild(deleteButton);
 
       paymentList.appendChild(item);
 
