@@ -519,6 +519,8 @@
   // 儲存全部學生
   let allStudents = [];
 
+    let monthlyFeesData = [];
+
     // 目前正在編輯的收款紀錄 ID
 let editingPaymentId = null;
 
@@ -538,6 +540,7 @@ let editingPaymentId = null;
   savePaymentBtn.textContent = '儲存';
 
   loadStudents();
+loadMonthlyFees();
 
 });
 
@@ -722,6 +725,129 @@ let editingPaymentId = null;
 
   }
 
+    // =========================
+// 載入月收資料
+// =========================
+
+async function loadMonthlyFees() {
+
+  try {
+
+    const response =
+      await fetch(
+        MAIN_API_URL
+      );
+
+    const result =
+      await response.json();
+
+    if (!result.success) {
+
+      throw new Error(
+        result.error ||
+        '月收資料讀取失敗'
+      );
+
+    }
+
+    monthlyFeesData =
+      result.monthlyFees || [];
+
+    console.log(
+      '月收資料數量：' +
+      monthlyFeesData.length
+    );
+
+  } catch (error) {
+
+    console.error(
+      '載入月收資料失敗：',
+      error
+    );
+
+    monthlyFeesData = [];
+
+  }
+
+}
+
+    // =========================
+// 顯示目前學生的月收
+// =========================
+
+function renderMonthlyFeeOptions(studentId) {
+
+  const monthlyFeeSelect =
+    document.getElementById(
+      'monthlyFeeSelect'
+    );
+
+  if (!monthlyFeeSelect) {
+    return;
+  }
+
+  monthlyFeeSelect.innerHTML = `
+    <option value="">
+      不指定月收
+    </option>
+  `;
+
+  if (!studentId) {
+    return;
+  }
+
+  const studentFees =
+    monthlyFeesData.filter(function (fee) {
+
+      return String(fee.studentId) ===
+        String(studentId);
+
+    });
+
+  if (studentFees.length === 0) {
+
+    monthlyFeeSelect.innerHTML = `
+      <option value="">
+        此學生目前沒有月收資料
+      </option>
+    `;
+
+    return;
+  }
+
+  studentFees.forEach(function (fee) {
+
+    const option =
+      document.createElement('option');
+
+    option.value =
+      fee.id;
+
+    option.textContent =
+      `${fee.year || ''}年｜${fee.month || ''}月｜${fee.content || ''}`;
+
+    monthlyFeeSelect.appendChild(
+      option
+    );
+
+  });
+
+}
+
+    studentSelect.addEventListener(
+  'change',
+  function () {
+
+    const studentId =
+      this.value;
+
+    renderMonthlyFeeOptions(
+      studentId
+    );
+
+  }
+);
+    
       // =========================
   // 儲存收款紀錄
   // =========================
@@ -766,6 +892,9 @@ let editingPaymentId = null;
     const paymentNote =
       document.getElementById('paymentNote').value.trim();
 
+    const monthlyFeeId =
+  document.getElementById('monthlyFeeSelect').value;
+    
 
     // =========================
     // 檢查資料
@@ -839,6 +968,9 @@ id:
             studentName:
               studentName,
 
+            monthlyFeeId:
+  monthlyFeeId,
+            
             paymentDate:
               paymentDate,
 
