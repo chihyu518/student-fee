@@ -1322,11 +1322,23 @@ if (
 }
 
       const note =
-        properties['📝 備註']
-          ?.rich_text?.[0]
-          ?.plain_text || '';
+  properties['📝 備註']
+    ?.rich_text?.[0]
+    ?.plain_text || '';
 
-      const recordId = page.id;
+// 🔗 對應月收
+const monthlyFeeId =
+  properties['🔗 對應月收']
+    ?.relation?.[0]
+    ?.id || '';
+
+// 🔗 對應季收
+const seasonFeeId =
+  properties['🔗 對應季收']
+    ?.relation?.[0]
+    ?.id || '';
+
+const recordId = page.id;
       
       const item =
         document.createElement('div');
@@ -1386,14 +1398,16 @@ if (
         function () {
 
           startEditPayment({
-            id: recordId,
-            student: student,
-            paymentDate: paymentDate,
-            amount: amount,
-            lastFive: lastFive,
-            receipt: receipt,
-            note: note
-          });
+  id: recordId,
+  student: student,
+  paymentDate: paymentDate,
+  amount: amount,
+  lastFive: lastFive,
+  receipt: receipt,
+  note: note,
+  monthlyFeeId: monthlyFeeId,
+  seasonFeeId: seasonFeeId
+});
 
         }
       );
