@@ -533,6 +533,7 @@
   let allStudents = [];
 
     let monthlyFeesData = [];
+let seasonFeesData = [];
 
     // 目前正在編輯的收款紀錄 ID
 let editingPaymentId = null;
@@ -554,6 +555,7 @@ let editingPaymentId = null;
 
   loadStudents();
 loadMonthlyFees();
+loadSeasonFees();
 
 });
 
@@ -785,6 +787,52 @@ async function loadMonthlyFees() {
 }
 
     // =========================
+// 載入季收資料
+// =========================
+
+async function loadSeasonFees() {
+
+  try {
+
+    const response =
+      await fetch(
+        MAIN_API_URL
+      );
+
+    const result =
+      await response.json();
+
+    if (!result.success) {
+
+      throw new Error(
+        result.error ||
+        '季收資料讀取失敗'
+      );
+
+    }
+
+    seasonFeesData =
+      result.seasonFees || [];
+
+    console.log(
+      '季收資料數量：' +
+      seasonFeesData.length
+    );
+
+  } catch (error) {
+
+    console.error(
+      '載入季收資料失敗：',
+      error
+    );
+
+    seasonFeesData = [];
+
+  }
+
+}
+    
+    // =========================
 // 顯示目前學生的月收
 // =========================
 
@@ -847,6 +895,69 @@ function renderMonthlyFeeOptions(studentId) {
 
 }
 
+    // =========================
+// 顯示目前學生的季收
+// =========================
+
+function renderSeasonFeeOptions(studentId) {
+
+  const seasonFeeSelect =
+    document.getElementById(
+      'seasonFeeSelect'
+    );
+
+  if (!seasonFeeSelect) {
+    return;
+  }
+
+  seasonFeeSelect.innerHTML = `
+    <option value="">
+      不指定季收
+    </option>
+  `;
+
+  if (!studentId) {
+    return;
+  }
+
+  const studentFees =
+    seasonFeesData.filter(function (fee) {
+
+      return String(fee.studentId) ===
+        String(studentId);
+
+    });
+
+  if (studentFees.length === 0) {
+
+    seasonFeeSelect.innerHTML = `
+      <option value="">
+        此學生目前沒有季收資料
+      </option>
+    `;
+
+    return;
+  }
+
+  studentFees.forEach(function (fee) {
+
+    const option =
+      document.createElement('option');
+
+    option.value =
+      fee.id;
+
+    option.textContent =
+      `${fee.period || ''}｜${fee.startDate || ''}～${fee.endDate || ''}`;
+
+    seasonFeeSelect.appendChild(
+      option
+    );
+
+  });
+
+}
+
     studentSelect.addEventListener(
   'change',
   function () {
@@ -854,7 +965,13 @@ function renderMonthlyFeeOptions(studentId) {
     const studentId =
       this.value;
 
+    // 顯示目前學生的月收
     renderMonthlyFeeOptions(
+      studentId
+    );
+
+    // 顯示目前學生的季收
+    renderSeasonFeeOptions(
       studentId
     );
 
