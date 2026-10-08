@@ -1024,6 +1024,9 @@ function renderSeasonFeeOptions(studentId) {
 
     const monthlyFeeId =
   document.getElementById('monthlyFeeSelect').value;
+
+    const seasonFeeId =
+  document.getElementById('seasonFeeSelect').value;
     
 
     // =========================
@@ -1101,6 +1104,9 @@ studentName:
 monthlyFeeId:
   monthlyFeeId,
 
+seasonFeeId:
+  document.getElementById('seasonFeeSelect').value,
+
 paymentDate:
   paymentDate,
 
@@ -1114,10 +1120,7 @@ paymentReceipt:
   paymentReceipt,
 
 paymentNote:
-  paymentNote,
-
-monthlyFeeId:
-  monthlyFeeId
+  paymentNote
 
           })
 
