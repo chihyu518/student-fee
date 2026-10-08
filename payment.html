@@ -392,6 +392,19 @@
 
   </div>
 
+          <div class="form-group">
+
+    <label for="monthlyFeeSelect">
+      🔗 對應月收
+    </label>
+
+    <select id="monthlyFeeSelect">
+      <option value="">
+        不指定月收
+      </option>
+    </select>
+
+  </div>
 
   <div class="form-group">
 
@@ -895,6 +908,9 @@ function renderMonthlyFeeOptions(studentId) {
     const monthlyFeeId =
   document.getElementById('monthlyFeeSelect').value;
     
+    const monthlyFeeId =
+  document.getElementById('monthlyFeeSelect').value;
+    
 
     // =========================
     // 檢查資料
@@ -986,6 +1002,9 @@ id:
             paymentNote:
               paymentNote
 
+            monthlyFeeId:
+  monthlyFeeId
+            
           })
 
         });
@@ -1121,6 +1140,17 @@ async function startEditPayment(data) {
       foundStudent.value;
   }
 
+    // 載入並帶入對應月收
+  await loadMonthlyFees();
+
+  const monthlyFeeSelect =
+    document.getElementById('monthlyFeeSelect');
+
+  if (monthlyFeeSelect && data.monthlyFeeId) {
+    monthlyFeeSelect.value =
+      data.monthlyFeeId;
+  }
+  
   // 帶入收款日期
   document.getElementById(
     'paymentDate'
