@@ -1231,15 +1231,26 @@ async function startEditPayment(data) {
   // 隱藏新增按鈕
   addPaymentBtn.style.display = 'none';
 
+
+  // =========================
   // 載入學生
+  // =========================
+
   await loadStudents();
 
+
+  // =========================
   // 帶入學生
-  studentSearch.value = data.student || '';
+  // =========================
+
+  studentSearch.value =
+    data.student || '';
 
   let foundStudent = null;
 
-  Array.from(studentSelect.options).forEach(function (option) {
+  Array.from(
+    studentSelect.options
+  ).forEach(function (option) {
 
     const name =
       option.textContent
@@ -1247,69 +1258,130 @@ async function startEditPayment(data) {
         .trim();
 
     if (name === data.student) {
+
       foundStudent = option;
+
     }
 
   });
 
+
   if (foundStudent) {
+
     studentSelect.value =
       foundStudent.value;
+
   }
 
-    // 載入並帶入對應月收
+
+  // =========================
+  // 重新產生這個學生的月收
+  // =========================
+
   await loadMonthlyFees();
 
-  const monthlyFeeSelect =
-    document.getElementById('monthlyFeeSelect');
+  renderMonthlyFeeOptions(
+    studentSelect.value
+  );
 
-  if (monthlyFeeSelect && data.monthlyFeeId) {
+
+  // 帶入原本的月收
+  const monthlyFeeSelect =
+    document.getElementById(
+      'monthlyFeeSelect'
+    );
+
+  if (
+    monthlyFeeSelect &&
+    data.monthlyFeeId
+  ) {
+
     monthlyFeeSelect.value =
       data.monthlyFeeId;
+
   }
 
-    // 載入並帶入對應季收
-  await loadSeasonFees();
 
+  // =========================
+  // 重新產生這個學生的季收
+  // =========================
+
+  renderSeasonFeeOptions(
+    studentSelect.value
+  );
+
+
+  // 帶入原本的季收
   const seasonFeeSelect =
-    document.getElementById('seasonFeeSelect');
+    document.getElementById(
+      'seasonFeeSelect'
+    );
 
-  if (seasonFeeSelect && data.seasonFeeId) {
+  if (
+    seasonFeeSelect &&
+    data.seasonFeeId
+  ) {
+
     seasonFeeSelect.value =
       data.seasonFeeId;
+
   }
-  
+
+
+  // =========================
   // 帶入收款日期
+  // =========================
+
   document.getElementById(
     'paymentDate'
   ).value =
     data.paymentDate || '';
 
+
+  // =========================
   // 帶入收款金額
+  // =========================
+
   document.getElementById(
     'paymentAmount'
   ).value =
     data.amount ?? '';
 
+
+  // =========================
   // 帶入匯款後五碼
+  // =========================
+
   document.getElementById(
     'paymentLastFive'
   ).value =
     data.lastFive || '';
 
+
+  // =========================
   // 帶入是否開收據
+  // =========================
+
   document.getElementById(
     'paymentReceipt'
   ).checked =
     Boolean(data.receipt);
 
+
+  // =========================
   // 帶入備註
+  // =========================
+
   document.getElementById(
     'paymentNote'
   ).value =
     data.note || '';
 
+
+  // =========================
   // 儲存按鈕改成「更新」
+  // =========================
+
   savePaymentBtn.textContent =
     '更新';
 
