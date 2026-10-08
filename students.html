@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>🧑‍🎓 學生名單</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f6f7f9;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans TC",
+        sans-serif;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      padding: 24px;
+      border-radius: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 10px 16px;
+      background: white;
+      color: #333;
+      text-decoration: none;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns:
+        2fr
+        1fr
+        1fr
+        1fr;
+      gap: 10px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      background: white;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .add-btn {
+      background: #333;
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .edit-btn {
+      background: #eee;
+      color: #333;
+    }
+
+    .delete-btn {
+      background: #ffe8e8;
+      color: #d33;
+    }
+
+    .student-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .student-card {
+      border: 1px solid #eee;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .student-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .student-info {
+      color: #777;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .student-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .status-active {
+      background: #e8f8e8;
+    }
+
+    .status-paused {
+      background: #fff5d9;
+    }
+
+    .status-ended {
+      background: #eee;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      padding: 20px;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      max-width: 550px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .modal h2 {
+      margin-top: 0;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 600;
+    }
+
+    .course-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .course-option {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .course-option label {
+      margin: 0;
+      font-weight: normal;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .cancel-btn {
+      background: #eee;
+    }
+
+    .save-btn {
+      background: #333;
+      color: white;
+    }
+
+    .stats {
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 700px) {
+
+      body {
+        padding: 12px;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .student-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .student-actions {
+        justify-content: flex-end;
+      }
+
+      .course-options {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+
+    <h1>🧑‍🎓 學生名單</h1>
+
+    <div class="subtitle">
+      管理學生資料、年級、狀態與上課課程
+    </div>
+
+    <a
+      href="index.html"
+      class="back-btn"
+    >
+      🏠 回學生收費管理系統
+    </a>
+
+  </div>
+
+
+  <div class="card">
+
+    <button
+      id="addStudentBtn"
+      class="add-btn"
+    >
+      ＋ 新增學生
+    </button>
+
+    <div class="toolbar">
+
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="🔍 搜尋姓名"
+      >
+
+      <select id="gradeFilter">
+
+        <option value="">
+          🎓 全部年級
+        </option>
+
+        <option value="一年級">一年級</option>
+        <option value="二年級">二年級</option>
+        <option value="三年級">三年級</option>
+        <option value="四年級">四年級</option>
+        <option value="五年級">五年級</option>
+        <option value="六年級">六年級</option>
+
+        <option value="國一">國一</option>
+        <option value="國二">國二</option>
+        <option value="國三">國三</option>
+
+      </select>
+
+
+      <select id="statusFilter">
+
+        <option value="">
+          🟢 全部狀態
+        </option>
+
+        <option value="🟢 上課中">
+          🟢 上課中
+        </option>
+
+        <option value="🟡 暫停">
+          🟡 暫停
+        </option>
+
+        <option value="🔴 結束">
+          🔴 結束
+        </option>
+
+      </select>
+
+
+      <select id="courseFilter">
+
+        <option value="">
+          📚 全部課程
+        </option>
+
+        <option value="英文">英文</option>
+        <option value="數學">數學</option>
+        <option value="課輔">課輔</option>
+        <option value="理化">理化</option>
+        <option value="私中英文">私中英文</option>
+        <option value="私中數學">私中數學</option>
+        <option value="私中國文">私中國文</option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div
+      id="stats"
+      class="stats"
+    >
+      載入學生資料中……
+    </div>
+
+    <div
+      id="studentList"
+      class="student-list"
+    >
+
+      <div class="empty">
+        載入學生資料中……
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     新增／編輯學生
+========================= -->
+
+<div
+  id="studentModal"
+  class="modal"
+>
+
+  <div class="modal-content">
+
+    <h2 id="modalTitle">
+      ＋ 新增學生
+    </h2>
+
+
+    <div class="form-group">
+
+      <label for="studentName">
+        👤 姓名
+      </label>
+
+      <input
+        id="studentName"
+        type="text"
+        placeholder="請輸入學生姓名"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="studentGrade">
+        🎓 年級
+      </label>
+
+      <select id="studentGrade">
+
+        <option value="">請選擇年級</option>
+
+        <option value="一年級">一年級</option>
+        <option value="二年級">二年級</option>
+        <option value="三年級">三年級</option>
+        <option value="四年級">四年級</option>
+        <option value="五年級">五年級</option>
+        <option value="六年級">六年級</option>
+
+        <option value="國一">國一</option>
+        <option value="國二">國二</option>
+        <option value="國三">國三</option>
+
+      </select>
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="studentStatus">
+        🟢 狀態
+      </label>
+
+      <select id="studentStatus">
+
+        <option value="🟢 上課中">
+          🟢 上課中
+        </option>
+
+        <option value="🟡 暫停">
+          🟡 暫停
+        </option>
+
+        <option value="🔴 結束">
+          🔴 結束
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label>
+        📚 上課課程
+      </label>
+
+      <div class="course-options">
+
+        <div class="course-option">
+          <label>
+            <input
+              type="checkbox"
+              value="英文"
+              class="course-check"
+            >
+            英文
+          </label>
+        </div>
+
+        <div class="course-option">
+          <label>
+            <input
+              type="checkbox"
+              value="數學"
+              class="course-check"
+            >
+            數學
+          </label>
+        </div>
+
+        <div class="course-option">
+          <label>
+            <input
+              type="checkbox"
+              value="課輔"
+              class="course-check"
+            >
+            課輔
+          </label>
+        </div>
+
+        <div class="course-option">
+          <label>
+            <input
+              type="checkbox"
+              value="理化"
+              class="course-check"
+            >
+            理化
+          </label>
+        </div>
+
+        <div class="course-option">
+          <label>
+            <input
+              type="checkbox"
+              value="私中英文"
+              class="course-check"
+            >
+            私中英文
+          </label>
+        </div>
+
+        <div class="course-option">
+          <label>
+            <input
+              type="checkbox"
+              value="私中數學"
+              class="course-check"
+            >
+            私中數學
+          </label>
+        </div>
+
+        <div class="course-option">
+          <label>
+            <input
+              type="checkbox"
+              value="私中國文"
+              class="course-check"
+            >
+            私中國文
+          </label>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-actions">
+
+      <button
+        id="cancelBtn"
+        class="cancel-btn"
+      >
+        取消
+      </button>
+
+      <button
+        id="saveBtn"
+        class="save-btn"
+      >
+        儲存
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  // =========================
+  // 學生名單 GAS
+  // =========================
+
+  const STUDENT_API_URL =
+    'https://script.google.com/macros/s/AKfycbyv3-omK-QEzQUOxo8btegugZwM3TuuAHCEdZMWWA-RecRakp6b84BfEh2vZ17evAnddA/exec';
+
+
+  let allStudents = [];
+
+  let editingStudentId = null;
+
+
+  const studentList =
+    document.getElementById('studentList');
+
+  const stats =
+    document.getElementById('stats');
+
+  const studentModal =
+    document.getElementById('studentModal');
+
+
+  // =========================
+  // 載入學生
+  // =========================
+
+  async function loadStudents() {
+
+    studentList.innerHTML = `
+      <div class="empty">
+        載入學生資料中……
+      </div>
+    `;
+
+    try {
+
+      const response =
+        await fetch(STUDENT_API_URL);
+
+      const result =
+        await response.json();
+
+      if (!result.success) {
+        throw new Error(
+          result.message || '學生資料載入失敗'
+        );
+      }
+
+      allStudents =
+        result.students || [];
+
+      renderStudents();
+
+    } catch (error) {
+
+      console.error(error);
+
+      studentList.innerHTML = `
+        <div class="empty">
+          學生資料載入失敗
+        </div>
+      `;
+
+      stats.textContent =
+        '載入失敗';
+
+      alert(
+        '學生資料載入失敗：' +
+        error.message
+      );
+
+    }
+
+  }
+
+
+  // =========================
+  // 顯示學生
+  // =========================
+
+  function renderStudents() {
+
+    const keyword =
+      document
+        .getElementById('searchInput')
+        .value
+        .trim()
+        .toLowerCase();
+
+    const grade =
+      document
+        .getElementById('gradeFilter')
+        .value;
+
+    const status =
+      document
+        .getElementById('statusFilter')
+        .value;
+
+    const course =
+      document
+        .getElementById('courseFilter')
+        .value;
+
+
+    const filtered =
+      allStudents.filter(function(student) {
+
+        const name =
+          String(student.name || '')
+            .toLowerCase();
+
+        const matchKeyword =
+          !keyword ||
+          name.includes(keyword);
+
+        const matchGrade =
+          !grade ||
+          student.grade === grade;
+
+        const matchStatus =
+          !status ||
+          student.status === status;
+
+        const matchCourse =
+          !course ||
+          (student.courses || [])
+            .includes(course);
+
+        return (
+          matchKeyword &&
+          matchGrade &&
+          matchStatus &&
+          matchCourse
+        );
+
+      });
+
+
+    stats.textContent =
+      `共 ${allStudents.length} 位學生，目前顯示 ${filtered.length} 位`;
+
+
+    if (filtered.length === 0) {
+
+      studentList.innerHTML = `
+        <div class="empty">
+          找不到符合條件的學生
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    studentList.innerHTML = '';
+
+
+    filtered.forEach(function(student) {
+
+      const card =
+        document.createElement('div');
+
+      card.className =
+        'student-card';
+
+
+      let statusClass =
+        'status';
+
+      if (student.status === '🟢 上課中') {
+        statusClass += ' status-active';
+      }
+
+      if (student.status === '🟡 暫停') {
+        statusClass += ' status-paused';
+      }
+
+      if (student.status === '🔴 結束') {
+        statusClass += ' status-ended';
+      }
+
+
+      card.innerHTML = `
+
+        <div>
+
+          <div class="student-name">
+            ${escapeHtml(student.name)}
+          </div>
+
+          <div class="student-info">
+
+            🎓 ${escapeHtml(student.grade || '未設定')}
+
+            <br>
+
+            <span class="${statusClass}">
+              ${escapeHtml(student.status || '')}
+            </span>
+
+            <br>
+
+            📚 ${
+              (student.courses || []).length > 0
+                ? student.courses
+                    .map(escapeHtml)
+                    .join('、')
+                : '尚未設定課程'
+            }
+
+          </div>
+
+        </div>
+
+
+        <div class="student-actions">
+
+          <button
+            class="edit-btn"
+            onclick="editStudent('${student.id}')"
+          >
+            ✏️ 編輯
+          </button>
+
+          <button
+            class="delete-btn"
+            onclick="deleteStudent('${student.id}')"
+          >
+            🗑️ 刪除
+          </button>
+
+        </div>
+
+      `;
+
+
+      studentList.appendChild(card);
+
+    });
+
+  }
+
+
+  // =========================
+  // HTML 安全處理
+  // =========================
+
+  function escapeHtml(value) {
+
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+
+  }
+
+
+  // =========================
+  // 開啟新增
+  // =========================
+
+  document
+    .getElementById('addStudentBtn')
+    .addEventListener(
+      'click',
+      function() {
+
+        editingStudentId = null;
+
+        document
+          .getElementById('modalTitle')
+          .textContent =
+            '＋ 新增學生';
+
+        clearForm();
+
+        studentModal.style.display =
+          'block';
+
+      }
+    );
+
+
+  // =========================
+  // 編輯學生
+  // =========================
+
+  function editStudent(id) {
+
+    const student =
+      allStudents.find(function(item) {
+        return item.id === id;
+      });
+
+    if (!student) {
+      alert('找不到學生資料');
+      return;
+    }
+
+
+    editingStudentId =
+      student.id;
+
+
+    document
+      .getElementById('modalTitle')
+      .textContent =
+        '✏️ 編輯學生';
+
+
+    document
+      .getElementById('studentName')
+      .value =
+        student.name || '';
+
+
+    document
+      .getElementById('studentGrade')
+      .value =
+        student.grade || '';
+
+
+    document
+      .getElementById('studentStatus')
+      .value =
+        student.status || '🟢 上課中';
+
+
+    document
+      .querySelectorAll('.course-check')
+      .forEach(function(check) {
+
+        check.checked =
+          (student.courses || [])
+            .includes(check.value);
+
+      });
+
+
+    studentModal.style.display =
+      'block';
+
+  }
+
+
+  // =========================
+  // 清空表單
+  // =========================
+
+  function clearForm() {
+
+    document
+      .getElementById('studentName')
+      .value = '';
+
+    document
+      .getElementById('studentGrade')
+      .value = '';
+
+    document
+      .getElementById('studentStatus')
+      .value =
+        '🟢 上課中';
+
+    document
+      .querySelectorAll('.course-check')
+      .forEach(function(check) {
+
+        check.checked = false;
+
+      });
+
+  }
+
+
+  // =========================
+  // 取消
+  // =========================
+
+  document
+    .getElementById('cancelBtn')
+    .addEventListener(
+      'click',
+      function() {
+
+        studentModal.style.display =
+          'none';
+
+        editingStudentId = null;
+
+      }
+    );
+
+
+  // =========================
+  // 儲存學生
+  // =========================
+
+  document
+    .getElementById('saveBtn')
+    .addEventListener(
+      'click',
+      async function() {
+
+        const name =
+          document
+            .getElementById('studentName')
+            .value
+            .trim();
+
+        const grade =
+          document
+            .getElementById('studentGrade')
+            .value;
+
+        const status =
+          document
+            .getElementById('studentStatus')
+            .value;
+
+
+        const courses =
+          Array.from(
+            document.querySelectorAll(
+              '.course-check:checked'
+            )
+          ).map(function(check) {
+            return check.value;
+          });
+
+
+        if (!name) {
+          alert('請輸入學生姓名');
+          return;
+        }
+
+        if (!grade) {
+          alert('請選擇年級');
+          return;
+        }
+
+
+        const saveBtn =
+          document.getElementById('saveBtn');
+
+        saveBtn.disabled = true;
+
+        saveBtn.textContent =
+          '儲存中……';
+
+
+        try {
+
+          const response =
+            await fetch(
+              STUDENT_API_URL,
+              {
+
+                method: 'POST',
+
+                headers: {
+                  'Content-Type':
+                    'text/plain;charset=utf-8'
+                },
+
+                body:
+                  JSON.stringify({
+
+                    id:
+                      editingStudentId,
+
+                    name:
+                      name,
+
+                    grade:
+                      grade,
+
+                    status:
+                      status,
+
+                    courses:
+                      courses
+
+                  })
+
+              }
+            );
+
+
+          const result =
+            await response.json();
+
+
+          if (!result.success) {
+
+            throw new Error(
+              result.message ||
+              '學生儲存失敗'
+            );
+
+          }
+
+
+          alert(
+            editingStudentId
+              ? '✏️ 學生修改成功！'
+              : '✅ 學生新增成功！'
+          );
+
+
+          studentModal.style.display =
+            'none';
+
+          editingStudentId = null;
+
+
+          await loadStudents();
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          alert(
+            '學生儲存失敗：' +
+            error.message
+          );
+
+        } finally {
+
+          saveBtn.disabled = false;
+
+          saveBtn.textContent =
+            '儲存';
+
+        }
+
+      }
+    );
+
+
+  // =========================
+  // 刪除學生
+  // =========================
+
+  async function deleteStudent(id) {
+
+    const student =
+      allStudents.find(function(item) {
+        return item.id === id;
+      });
+
+
+    if (!student) {
+      return;
+    }
+
+
+    const confirmed =
+      confirm(
+        `確定要刪除「${student.name}」嗎？`
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    try {
+
+      const response =
+        await fetch(
+          STUDENT_API_URL,
+          {
+
+            method: 'POST',
+
+            headers: {
+              'Content-Type':
+                'text/plain;charset=utf-8'
+            },
+
+            body:
+              JSON.stringify({
+
+                action:
+                  'delete',
+
+                id:
+                  id
+
+              })
+
+          }
+        );
+
+
+      const result =
+        await response.json();
+
+
+      if (!result.success) {
+
+        throw new Error(
+          result.message ||
+          '刪除學生失敗'
+        );
+
+      }
+
+
+      alert('🗑️ 學生刪除成功！');
+
+      await loadStudents();
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        '刪除學生失敗：' +
+        error.message
+      );
+
+    }
+
+  }
+
+
+  // =========================
+  // 搜尋／篩選
+  // =========================
+
+  document
+    .getElementById('searchInput')
+    .addEventListener(
+      'input',
+      renderStudents
+    );
+
+
+  document
+    .getElementById('gradeFilter')
+    .addEventListener(
+      'change',
+      renderStudents
+    );
+
+
+  document
+    .getElementById('statusFilter')
+    .addEventListener(
+      'change',
+      renderStudents
+    );
+
+
+  document
+    .getElementById('courseFilter')
+    .addEventListener(
+      'change',
+      renderStudents
+    );
+
+
+  // =========================
+  // 啟動
+  // =========================
+
+  loadStudents();
+
+</script>
+
+</body>
+
+</html>
