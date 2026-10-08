@@ -1267,6 +1267,17 @@ async function startEditPayment(data) {
     monthlyFeeSelect.value =
       data.monthlyFeeId;
   }
+
+    // 載入並帶入對應季收
+  await loadSeasonFees();
+
+  const seasonFeeSelect =
+    document.getElementById('seasonFeeSelect');
+
+  if (seasonFeeSelect && data.seasonFeeId) {
+    seasonFeeSelect.value =
+      data.seasonFeeId;
+  }
   
   // 帶入收款日期
   document.getElementById(
