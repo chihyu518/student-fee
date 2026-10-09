@@ -1303,29 +1303,34 @@ async function startEditPayment(data) {
 
 
   // =========================
-  // 重新產生這個學生的季收
-  // =========================
+// 重新產生這個學生的季收
+// =========================
 
-  renderSeasonFeeOptions(
-    studentSelect.value
+renderSeasonFeeOptions(
+  studentSelect.value
+);
+
+
+// 帶入原本的季收
+const seasonFeeSelect =
+  document.getElementById(
+    'seasonFeeSelect'
   );
 
+if (
+  seasonFeeSelect &&
+  data.seasonFeeId
+) {
 
-  // 帶入原本的季收
-  const seasonFeeSelect =
-    document.getElementById(
-      'seasonFeeSelect'
-    );
-
-  if (
-    seasonFeeSelect &&
-    data.seasonFeeId
-  ) {
+  // 等季收選項產生完成後再設定
+  setTimeout(function () {
 
     seasonFeeSelect.value =
       data.seasonFeeId;
 
-  }
+  }, 100);
+
+}
 
 
   // =========================
