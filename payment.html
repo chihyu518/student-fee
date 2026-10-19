@@ -557,6 +557,7 @@ let editingPaymentId = null;
   loadStudents();
 loadMonthlyFees();
 loadSeasonFees();
+loadFeeSettings();
 
 });
 
@@ -786,7 +787,47 @@ async function loadMonthlyFees() {
   }
 
 }
+async function loadFeeSettings() {
 
+  try {
+
+    const response =
+      await fetch(
+        MAIN_API_URL
+      );
+
+    const result =
+      await response.json();
+
+    if (!result.success) {
+
+      throw new Error(
+        result.error ||
+        '收費設定讀取失敗'
+      );
+
+    }
+
+    feeSettingsData =
+      result.feeSettings || [];
+
+    console.log(
+      '收費設定數量：' +
+      feeSettingsData.length
+    );
+
+  } catch (error) {
+
+    console.error(
+      '載入收費設定失敗：',
+      error
+    );
+
+    feeSettingsData = [];
+
+  }
+
+}
     // =========================
 // 載入季收資料
 // =========================
