@@ -1029,6 +1029,97 @@ function renderSeasonFeeOptions(studentId) {
       studentId
     );
 
+    // =========================
+    // 顯示適用的收費設定
+    // =========================
+
+    const feeSettingSelect =
+      document.getElementById(
+        'feeSettingSelect'
+      );
+
+    if (!feeSettingSelect) {
+      return;
+    }
+
+    feeSettingSelect.innerHTML = `
+      <option value="">
+        請選擇收費項目
+      </option>
+    `;
+
+    if (!studentId) {
+      feeSettingSelect.innerHTML = `
+        <option value="">
+          請先選擇學生
+        </option>
+      `;
+
+      return;
+    }
+
+    // 找到目前學生
+    const student =
+      allStudents.find(function (item) {
+
+        return String(item.id) ===
+          String(studentId);
+
+      });
+
+    if (!student) {
+      return;
+    }
+
+    const studentGrade =
+      String(student.grade || '').trim();
+
+    // 找出適用這個年級的收費設定
+    const matchedFees =
+      feeSettingsData.filter(function (fee) {
+
+        if (!fee.enabled) {
+          return false;
+        }
+
+        const grades =
+          fee.grades || [];
+
+        return (
+          grades.includes(studentGrade) ||
+          grades.includes('全年級')
+        );
+
+      });
+
+    if (matchedFees.length === 0) {
+
+      feeSettingSelect.innerHTML = `
+        <option value="">
+          此學生目前沒有適用的收費項目
+        </option>
+      `;
+
+      return;
+    }
+
+    matchedFees.forEach(function (fee) {
+
+      const option =
+        document.createElement('option');
+
+      option.value =
+        fee.id;
+
+      option.textContent =
+        `${fee.name}｜$${fee.amount ?? 0}`;
+
+      feeSettingSelect.appendChild(
+        option
+      );
+
+    });
+
   }
 );
     
