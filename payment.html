@@ -1014,7 +1014,7 @@ function renderSeasonFeeOptions(studentId) {
 
     studentSelect.addEventListener(
   'change',
-  function () {
+  async function () {
 
     const studentId =
       this.value;
@@ -1030,7 +1030,7 @@ function renderSeasonFeeOptions(studentId) {
     );
 
     // =========================
-    // 顯示適用的收費設定
+    // 收費設定
     // =========================
 
     const feeSettingSelect =
@@ -1044,11 +1044,12 @@ function renderSeasonFeeOptions(studentId) {
 
     feeSettingSelect.innerHTML = `
       <option value="">
-        請選擇收費項目
+        收費設定載入中……
       </option>
     `;
 
     if (!studentId) {
+
       feeSettingSelect.innerHTML = `
         <option value="">
           請先選擇學生
@@ -1056,6 +1057,16 @@ function renderSeasonFeeOptions(studentId) {
       `;
 
       return;
+    }
+
+    // 確保收費設定已經載入
+    if (
+      !feeSettingsData ||
+      feeSettingsData.length === 0
+    ) {
+
+      await loadFeeSettings();
+
     }
 
     // 找到目前學生
@@ -1068,13 +1079,40 @@ function renderSeasonFeeOptions(studentId) {
       });
 
     if (!student) {
+
+      feeSettingSelect.innerHTML = `
+        <option value="">
+          找不到學生資料
+        </option>
+      `;
+
       return;
     }
 
     const studentGrade =
-      String(student.grade || '').trim();
+      String(
+        student.grade || ''
+      ).trim();
 
-    // 找出適用這個年級的收費設定
+    console.log(
+      '目前學生：',
+      student.name
+    );
+
+    console.log(
+      '目前年級：',
+      studentGrade
+    );
+
+    console.log(
+      '收費設定數量：',
+      feeSettingsData.length
+    );
+
+    // =========================
+    // 篩選適用年級
+    // =========================
+
     const matchedFees =
       feeSettingsData.filter(function (fee) {
 
@@ -1092,7 +1130,18 @@ function renderSeasonFeeOptions(studentId) {
 
       });
 
-    if (matchedFees.length === 0) {
+    console.log(
+      '符合的收費項目：',
+      matchedFees
+    );
+
+    // =========================
+    // 沒有符合項目
+    // =========================
+
+    if (
+      matchedFees.length === 0
+    ) {
 
       feeSettingSelect.innerHTML = `
         <option value="">
@@ -1103,10 +1152,22 @@ function renderSeasonFeeOptions(studentId) {
       return;
     }
 
+    // =========================
+    // 顯示收費項目
+    // =========================
+
+    feeSettingSelect.innerHTML = `
+      <option value="">
+        請選擇收費項目
+      </option>
+    `;
+
     matchedFees.forEach(function (fee) {
 
       const option =
-        document.createElement('option');
+        document.createElement(
+          'option'
+        );
 
       option.value =
         fee.id;
