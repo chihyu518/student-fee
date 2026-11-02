@@ -1183,6 +1183,76 @@ function renderSeasonFeeOptions(studentId) {
 
   }
 );
+
+    // =========================
+// 複選收費項目 → 自動加總金額
+// =========================
+
+const feeSettingSelect =
+  document.getElementById(
+    'feeSettingSelect'
+  );
+
+const paymentAmountInput =
+  document.getElementById(
+    'paymentAmount'
+  );
+
+feeSettingSelect.addEventListener(
+  'change',
+  function () {
+
+    const selectedIds =
+      Array.from(
+        this.selectedOptions
+      )
+      .map(function (option) {
+        return option.value;
+      })
+      .filter(function (id) {
+        return id !== '';
+      });
+
+    let totalAmount = 0;
+
+    selectedIds.forEach(
+      function (feeId) {
+
+        const fee =
+          feeSettingsData.find(
+            function (item) {
+
+              return String(item.id) ===
+                String(feeId);
+
+            }
+          );
+
+        if (fee) {
+
+          totalAmount +=
+            Number(fee.amount) || 0;
+
+        }
+
+      }
+    );
+
+    paymentAmountInput.value =
+      totalAmount || '';
+
+    console.log(
+      '已選收費項目：',
+      selectedIds
+    );
+
+    console.log(
+      '收費總金額：',
+      totalAmount
+    );
+
+  }
+);
     
       // =========================
   // 儲存收款紀錄
