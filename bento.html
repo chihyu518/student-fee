@@ -211,6 +211,137 @@
 
   </div>
 
+  <script>
+
+const API_URL =
+'https://script.google.com/macros/s/AKfycbyFhc5Sj2lj_XyJTlN61RVvumxH7HH0bgc4ejYNH6FFGGKHR2npLNJwmx2yyL-SL56W/exec';
+
+let allStudents = [];
+
+
+const studentSelect =
+  document.getElementById(
+    'studentSelect'
+  );
+
+
+async function loadStudents() {
+
+  studentSelect.innerHTML = `
+    <option value="">
+      載入學生名單中……
+    </option>
+  `;
+
+  try {
+
+    const response =
+      await fetch(
+        API_URL + '?action=getStudents'
+      );
+
+    const result =
+      await response.json();
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message ||
+        '學生名單讀取失敗'
+      );
+
+    }
+
+    allStudents =
+      result.students || [];
+
+
+    allStudents.sort(
+      function (a, b) {
+
+        const gradeCompare =
+          String(a.grade || '')
+            .localeCompare(
+              String(b.grade || ''),
+              'zh-Hant'
+            );
+
+        if (gradeCompare !== 0) {
+          return gradeCompare;
+        }
+
+        return String(a.name || '')
+          .localeCompare(
+            String(b.name || ''),
+            'zh-Hant'
+          );
+
+      }
+    );
+
+
+    studentSelect.innerHTML = `
+      <option value="">
+        請選擇學生
+      </option>
+    `;
+
+
+    allStudents.forEach(
+      function (student) {
+
+        const option =
+          document.createElement(
+            'option'
+          );
+
+        option.value =
+          student.id;
+
+        option.textContent =
+          `${student.name || ''}｜${student.grade || ''}`;
+
+        studentSelect.appendChild(
+          option
+        );
+
+      }
+    );
+
+
+    console.log(
+      '便當頁學生數量：' +
+      allStudents.length
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      '載入學生名單失敗：',
+      error
+    );
+
+    studentSelect.innerHTML = `
+      <option value="">
+        學生名單載入失敗
+      </option>
+    `;
+
+    alert(
+      '學生名單載入失敗：' +
+      error.message
+    );
+
+  }
+
+}
+
+
+// 頁面開啟時載入學生
+loadStudents();
+
+</script>
 
 </body>
 
