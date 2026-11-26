@@ -1249,7 +1249,7 @@ updateSeasonStats(seasonFeesData);
   const seasonList = document.getElementById('seasonList');
 
   if (seasonFees.length === 0) {
-    seasonList.innerHTML = '目前沒有季收資料';
+    seasonList.innerHTML = '目前沒有符合條件的季收資料';
     return;
   }
 
@@ -1261,7 +1261,7 @@ updateSeasonStats(seasonFeesData);
 
     const studentName = student
       ? student.name
-      : item.studentName || '未知學生';
+      : (item.studentName || '未知學生');
 
     return `
       <div class="monthly-item">
@@ -1280,9 +1280,9 @@ updateSeasonStats(seasonFeesData);
             ${item.period || '未設定期別'}
           </span>
 
-<span class="monthly-tag">
-  👩‍🏫 ${item.teacher || '未設定老師'}
-</span>
+          <span class="monthly-tag">
+            👩‍🏫 ${item.teacher || '未設定老師'}
+          </span>
 
         </div>
 
@@ -1294,39 +1294,41 @@ updateSeasonStats(seasonFeesData);
           📚 ${item.totalLessons ?? '未設定'} 堂
         </div>
 
-<div class="monthly-content">
-  📅 上課日：${item.classDays ? item.classDays.join('、') : '未設定'}
-</div>
+        <div class="monthly-content">
+          📅 上課日：${item.classDays
+            ? item.classDays.join('、')
+            : '未設定'}
+        </div>
 
-<div class="monthly-content">
-  📖 教材：${item.textbook ? '有' : '無'}
-</div>
+        <div class="monthly-content">
+          📖 教材：${item.textbook ? '有' : '無'}
+        </div>
 
-<div class="monthly-content">
-  📚 教材冊數及金額：${item.textbookInfo || '未填寫'}
-</div>
+        <div class="monthly-content">
+          📚 教材冊數及金額：${item.textbookInfo || '未填寫'}
+        </div>
 
-<div class="monthly-content">
-  📝 備註：${item.note || '無'}
-</div>
+        <div class="monthly-content">
+          📝 備註：${item.note || '無'}
+        </div>
 
         <div class="monthly-status">
           ${item.billed ? '✅ 已開單' : '⬜ 未開單'}
         </div>
 
-<button
-  type="button"
-  class="edit-season-btn"
-  data-id="${item.id}">
-  ✏️ 編輯
-</button>
+        <button
+          type="button"
+          class="edit-season-btn"
+          data-id="${item.id}">
+          ✏️ 編輯
+        </button>
 
-<button
-  type="button"
-  class="delete-season-btn"
-  data-id="${item.id}">
-  🗑️ 刪除
-</button>
+        <button
+          type="button"
+          class="delete-season-btn"
+          data-id="${item.id}">
+          🗑️ 刪除
+        </button>
 
       </div>
     `;
