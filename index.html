@@ -430,7 +430,10 @@
   💵 收款紀錄
 </button>
 
-<button class="nav-btn">
+<button
+  class="nav-btn"
+  onclick="showPage('settingsPage', this)"
+>
   ⚙️ 收費設定
 </button>
 
@@ -604,6 +607,70 @@
       </div>
 </div>
 
+    <div id="settingsPage" class="page" style="display:none;">
+
+  <div class="section">
+
+    <h2>⚙️ 收費設定</h2>
+
+    <div style="
+      background:white;
+      border:1px solid #e5e7eb;
+      border-radius:16px;
+      padding:24px;
+      margin-top:20px;
+    ">
+
+      <h3 style="margin-top:0;">
+        💰 月收常用設定
+      </h3>
+
+      <p style="color:#777;">
+        這裡之後可以設定常用的月收項目與金額。
+      </p>
+
+    </div>
+
+    <div style="
+      background:white;
+      border:1px solid #e5e7eb;
+      border-radius:16px;
+      padding:24px;
+      margin-top:16px;
+    ">
+
+      <h3 style="margin-top:0;">
+        📚 季收常用設定
+      </h3>
+
+      <p style="color:#777;">
+        這裡之後可以設定常用的季收項目與金額。
+      </p>
+
+    </div>
+
+    <div style="
+      background:white;
+      border:1px solid #e5e7eb;
+      border-radius:16px;
+      padding:24px;
+      margin-top:16px;
+    ">
+
+      <h3 style="margin-top:0;">
+        🍱 便當費設定
+      </h3>
+
+      <p style="color:#777;">
+        這裡之後可以設定便當費。
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+    
     <div id="seasonPage" class="page" style="display:none;">
 
   <div class="section">
